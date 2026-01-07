@@ -1,0 +1,570 @@
+{
+  "Adenium Obesum": {
+    "name_id": "Kamboja Jepang",
+    "aliases": ["desert rose", "adenium"],
+    "type": "Hias",
+    "schedule": [2, 5],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1586944365313-2d4d3d2c88f3?auto=format&fit=crop&w=600&q=80"
+  },
+  "Aglaonema": {
+    "name_id": "Aglaonema",
+    "aliases": ["sri rejeki", "chinese evergreen"],
+    "type": "Hias",
+    "schedule": [2, 5],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1614594805727-463d12d99723?auto=format&fit=crop&w=600&q=80"
+  },
+  "Allium Fistulosum": {
+    "name_id": "Daun Bawang",
+    "aliases": ["scallion", "spring onion"],
+    "type": "Sayur",
+    "schedule": [1, 2, 4, 5],
+    "fert": [1],
+    "img": "https://images.unsplash.com/photo-1518977676601-b53f02bad675?auto=format&fit=crop&w=600&q=80"
+  },
+  "Alpinia Galanga": {
+    "name_id": "Lengkuas",
+    "aliases": ["galangal", "laos"],
+    "type": "Herbal",
+    "schedule": [3],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1587049495034-7d5a0c64115d?auto=format&fit=crop&w=600&q=80"
+  },
+  "Aloe Vera": {
+    "name_id": "Lidah Buaya",
+    "aliases": ["aloe vera"],
+    "type": "Herbal",
+    "schedule": [3],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1616863486307-e0750e3328ce?auto=format&fit=crop&w=600&q=80"
+  },
+  "Ananas Comosus": {
+    "name_id": "Nanas",
+    "aliases": ["pineapple", "nene"],
+    "type": "Buah",
+    "schedule": [2, 5],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1550258114-b03348f15a3f?auto=format&fit=crop&w=600&q=80"
+  },
+  "Anthuriun": {
+    "name_id": "Anthurium",
+    "aliases": ["gelombang cinta", "kuping gajah"],
+    "type": "Hias",
+    "schedule": [4],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1614594805727-463d12d99723?auto=format&fit=crop&w=600&q=80"
+  },
+  "Apium Graveolens": {
+    "name_id": "Seledri",
+    "aliases": ["celery", "daun sop"],
+    "type": "Sayur",
+    "schedule": [0, 1, 2, 3, 4, 5, 6],
+    "fert": [1],
+    "img": "https://images.unsplash.com/photo-1610450949168-52206d289945?auto=format&fit=crop&w=600&q=80"
+  },
+  "Artocarpus Heterophyllus": {
+    "name_id": "Nangka",
+    "aliases": ["jackfruit", "tewal"],
+    "type": "Buah",
+    "schedule": [2, 6],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1518018318625-a1c1d63630d7?auto=format&fit=crop&w=600&q=80"
+  },
+  "Begonia": {
+    "name_id": "Begonia",
+    "aliases": ["begonia"],
+    "type": "Hias",
+    "schedule": [1, 3, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1498522271744-cdd43b954542?auto=format&fit=crop&w=600&q=80"
+  },
+  "Bougainvillea": {
+    "name_id": "Bugenvil",
+    "aliases": ["paper flower", "bunga kertas"],
+    "type": "Bunga",
+    "schedule": [2, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1568283660523-455b57d69b4c?auto=format&fit=crop&w=600&q=80"
+  },
+  "Brassica Oleracea": {
+    "name_id": "Brokoli",
+    "aliases": ["broccoli"],
+    "type": "Sayur",
+    "schedule": [1, 3, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=600&q=80"
+  },
+  "Brassica Rapa": {
+    "name_id": "Sawi Hijau",
+    "aliases": ["mustard greens", "caisim"],
+    "type": "Sayur",
+    "schedule": [0, 1, 2, 3, 4, 5, 6],
+    "fert": [1],
+    "img": "https://images.unsplash.com/photo-1589370126725-b1a9c2d76508?auto=format&fit=crop&w=600&q=80"
+  },
+  "Cactaceae": {
+    "name_id": "Kaktus",
+    "aliases": ["cactus"],
+    "type": "Hias",
+    "schedule": [0],
+    "fert": [5],
+    "img": "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&w=600&q=80"
+  },
+  "Caladium": {
+    "name_id": "Keladi",
+    "aliases": ["caladium", "kuping gajah"],
+    "type": "Hias",
+    "schedule": [1, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1600350327299-4d6cb600742f?auto=format&fit=crop&w=600&q=80"
+  },
+  "Calathea Orbifolia": {
+    "name_id": "Kalatea",
+    "aliases": ["calathea", "meranti"],
+    "type": "Hias",
+    "schedule": [2, 6],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=600&q=80"
+  },
+  "Capsicum Annuum": {
+    "name_id": "Cabai",
+    "aliases": ["cabe", "chili", "lombok"],
+    "type": "Sayur",
+    "schedule": [1, 3, 5, 0],
+    "fert": [1],
+    "img": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=600&q=80"
+  },
+  "Carica Papaya": {
+    "name_id": "Pepaya",
+    "aliases": ["papaya", "kates"],
+    "type": "Buah",
+    "schedule": [2, 5],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1517260739337-6799d2ffdeee?auto=format&fit=crop&w=600&q=80"
+  },
+  "Chrysanthemum": {
+    "name_id": "Krisan",
+    "aliases": ["serunai", "chrysanth"],
+    "type": "Bunga",
+    "schedule": [0, 3],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1533038590840-1cde6b66b721?auto=format&fit=crop&w=600&q=80"
+  },
+  "Citrullus Lanatus": {
+    "name_id": "Semangka",
+    "aliases": ["watermelon", "semangka merah"],
+    "type": "Buah",
+    "schedule": [0, 1, 2, 3, 4, 5, 6],
+    "fert": [1],
+    "img": "https://images.unsplash.com/photo-1563114773-84221bd92af0?auto=format&fit=crop&w=600&q=80"
+  },
+  "Citrus Limon": {
+    "name_id": "Lemon",
+    "aliases": ["lemon kuning", "citrus"],
+    "type": "Buah",
+    "schedule": [3, 6],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1585052245554-bc320ea49842?auto=format&fit=crop&w=600&q=80"
+  },
+  "Citrus Sinensis": {
+    "name_id": "Jeruk Manis",
+    "aliases": ["orange", "limau"],
+    "type": "Buah",
+    "schedule": [3, 0],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=80"
+  },
+  "Cocos Nucifera": {
+    "name_id": "Kelapa",
+    "aliases": ["coconut", "nyir"],
+    "type": "Buah",
+    "schedule": [0, 3, 6],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1550503023-c95696129532?auto=format&fit=crop&w=600&q=80"
+  },
+  "Cucumis Melo": {
+    "name_id": "Melon",
+    "aliases": ["melon", "honeydew"],
+    "type": "Buah",
+    "schedule": [0, 2, 4, 6],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1593456073898-3f5647568533?auto=format&fit=crop&w=600&q=80"
+  },
+  "Cucumis Sativus": {
+    "name_id": "Timun",
+    "aliases": ["cucumber", "ketimun"],
+    "type": "Sayur",
+    "schedule": [0, 2, 4, 6],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=600&q=80"
+  },
+  "Curcuma Longa": {
+    "name_id": "Kunyit",
+    "aliases": ["turmeric", "kunir"],
+    "type": "Herbal",
+    "schedule": [3],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1615485290141-2f932e4d0e2e?auto=format&fit=crop&w=600&q=80"
+  },
+  "Curcuma Zanthorrhiza": {
+    "name_id": "Temulawak",
+    "aliases": ["java ginger", "temulawak"],
+    "type": "Herbal",
+    "schedule": [3],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1615485290390-394980663753?auto=format&fit=crop&w=600&q=80"
+  },
+  "Cymbopogon Citratus": {
+    "name_id": "Serai",
+    "aliases": ["lemongrass", "sereh"],
+    "type": "Herbal",
+    "schedule": [2, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1615485501905-c1e14930263b?auto=format&fit=crop&w=600&q=80"
+  },
+  "Daucus Carota": {
+    "name_id": "Wortel",
+    "aliases": ["carrot"],
+    "type": "Sayur",
+    "schedule": [2, 5],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80"
+  },
+  "Durio Zibethinus": {
+    "name_id": "Durian",
+    "aliases": ["durian", "king of fruits", "duren"],
+    "type": "Buah",
+    "schedule": [2, 6],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1591341143258-2083952d79d6?auto=format&fit=crop&w=600&q=80"
+  },
+  "Epipremnum Aureum": {
+    "name_id": "Sirih Gading",
+    "aliases": ["pothos", "devil's ivy"],
+    "type": "Hias",
+    "schedule": [3],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1596724888126-e1f24d318357?auto=format&fit=crop&w=600&q=80"
+  },
+  "Ficus Elastica": {
+    "name_id": "Karet Kebo",
+    "aliases": ["rubber plant", "ficus"],
+    "type": "Hias",
+    "schedule": [6],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1598880940086-5d2595874c76?auto=format&fit=crop&w=600&q=80"
+  },
+  "Fragaria X Ananassa": {
+    "name_id": "Stroberi",
+    "aliases": ["strawberry"],
+    "type": "Buah",
+    "schedule": [1, 3, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80"
+  },
+  "Garcinia Mangostana": {
+    "name_id": "Manggis",
+    "aliases": ["mangosteen", "queen of fruits"],
+    "type": "Buah",
+    "schedule": [1, 4],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1620217482862-28e6790b9576?auto=format&fit=crop&w=600&q=80"
+  },
+  "Helianthus Annuus": {
+    "name_id": "Bunga Matahari",
+    "aliases": ["sunflower"],
+    "type": "Bunga",
+    "schedule": [1, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1470509037663-253afd7f0f51?auto=format&fit=crop&w=600&q=80"
+  },
+  "Hibiscus Rosa Sinensis": {
+    "name_id": "Kembang Sepatu",
+    "aliases": ["hibiscus", "bunga raya"],
+    "type": "Bunga",
+    "schedule": [0, 3, 6],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1572935298816-633013898654?auto=format&fit=crop&w=600&q=80"
+  },
+  "Ipomoea Aquatica": {
+    "name_id": "Kangkung",
+    "aliases": ["water spinach", "kangkung air"],
+    "type": "Sayur",
+    "schedule": [0, 1, 2, 3, 4, 5, 6],
+    "fert": [1],
+    "img": "https://images.unsplash.com/photo-1629156365313-5f6540306734?auto=format&fit=crop&w=600&q=80"
+  },
+  "Jasminum": {
+    "name_id": "Melati",
+    "aliases": ["jasmine", "puspa bangsa"],
+    "type": "Bunga",
+    "schedule": [2, 5],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1596728028771-464a93551532?auto=format&fit=crop&w=600&q=80"
+  },
+  "Kaempferia Galanga": {
+    "name_id": "Kencur",
+    "aliases": ["aromatic ginger", "cikur"],
+    "type": "Herbal",
+    "schedule": [3],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1615485925763-76a0c024508e?auto=format&fit=crop&w=600&q=80"
+  },
+  "Lavandula": {
+    "name_id": "Lavender",
+    "aliases": ["lavender", "bunga ungu"],
+    "type": "Bunga",
+    "schedule": [1, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1565011523534-747a8601f10a?auto=format&fit=crop&w=600&q=80"
+  },
+  "Lactuca Sativa": {
+    "name_id": "Selada",
+    "aliases": ["lettuce", "selada keriting"],
+    "type": "Sayur",
+    "schedule": [0, 2, 4, 6],
+    "fert": [1],
+    "img": "https://images.unsplash.com/photo-1622206141029-ee962e4e4b46?auto=format&fit=crop&w=600&q=80"
+  },
+  "Mangifera Indica": {
+    "name_id": "Mangga",
+    "aliases": ["mango"],
+    "type": "Buah",
+    "schedule": [2, 6],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=600&q=80"
+  },
+  "Mentha": {
+    "name_id": "Daun Mint",
+    "aliases": ["mint", "peppermint"],
+    "type": "Herbal",
+    "schedule": [0, 2, 4, 6],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1628556270448-e461b4020352?auto=format&fit=crop&w=600&q=80"
+  },
+  "Momordica Charantia": {
+    "name_id": "Pare",
+    "aliases": ["bitter melon", "paria"],
+    "type": "Sayur",
+    "schedule": [1, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1597850893264-775e5264b3c4?auto=format&fit=crop&w=600&q=80"
+  },
+  "Monstera Deliciosa": {
+    "name_id": "Monstera",
+    "aliases": ["janda bolong", "swiss cheese plant"],
+    "type": "Hias",
+    "schedule": [6],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=600&q=80"
+  },
+  "Moringa Oleifera": {
+    "name_id": "Kelor",
+    "aliases": ["moringa", "drumstick tree"],
+    "type": "Sayur",
+    "schedule": [1, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1589053805825-f6c6d26738c8?auto=format&fit=crop&w=600&q=80"
+  },
+  "Musa": {
+    "name_id": "Pisang",
+    "aliases": ["banana"],
+    "type": "Buah",
+    "schedule": [1, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=600&q=80"
+  },
+  "Nephelium Lappaceum": {
+    "name_id": "Rambutan",
+    "aliases": ["rambutan"],
+    "type": "Buah",
+    "schedule": [1, 4],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1598580211186-59b56f874837?auto=format&fit=crop&w=600&q=80"
+  },
+  "Ocimum Basilicum": {
+    "name_id": "Kemangi",
+    "aliases": ["basil", "lemon basil"],
+    "type": "Herbal",
+    "schedule": [1, 3, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1618331393685-61841219b584?auto=format&fit=crop&w=600&q=80"
+  },
+  "Orchidaceae": {
+    "name_id": "Anggrek",
+    "aliases": ["orchid", "puspa pesona"],
+    "type": "Bunga",
+    "schedule": [3],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1566938064504-a6998b3168a6?auto=format&fit=crop&w=600&q=80"
+  },
+  "Pandanus Amaryllifolius": {
+    "name_id": "Pandan",
+    "aliases": ["pandan", "screwpine"],
+    "type": "Herbal",
+    "schedule": [1, 3, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1563812248543-983637e6f363?auto=format&fit=crop&w=600&q=80"
+  },
+  "Persea Americana": {
+    "name_id": "Alpukat",
+    "aliases": ["avocado", "apokat"],
+    "type": "Buah",
+    "schedule": [1, 5],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80"
+  },
+  "Phaseolus Vulgaris": {
+    "name_id": "Buncis",
+    "aliases": ["green beans", "string beans"],
+    "type": "Sayur",
+    "schedule": [1, 3, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1567375698509-4622738a9b3d?auto=format&fit=crop&w=600&q=80"
+  },
+  "Philodendron": {
+    "name_id": "Filodendron",
+    "aliases": ["philodendron"],
+    "type": "Hias",
+    "schedule": [2, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1610444589098-1f1966a39d89?auto=format&fit=crop&w=600&q=80"
+  },
+  "Piper Betle": {
+    "name_id": "Daun Sirih",
+    "aliases": ["betel leaf", "suruh"],
+    "type": "Herbal",
+    "schedule": [2, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1619875608682-628469d51185?auto=format&fit=crop&w=600&q=80"
+  },
+  "Plumeria": {
+    "name_id": "Kamboja",
+    "aliases": ["frangipani", "kemboja"],
+    "type": "Bunga",
+    "schedule": [1, 4],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1533633350176-6c90558cb7cb?auto=format&fit=crop&w=600&q=80"
+  },
+  "Psidium Guajava": {
+    "name_id": "Jambu Biji",
+    "aliases": ["guava", "jambu klutuk"],
+    "type": "Buah",
+    "schedule": [1, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1536510344784-b43e97720c2f?auto=format&fit=crop&w=600&q=80"
+  },
+  "Punica Granatum": {
+    "name_id": "Delima",
+    "aliases": ["pomegranate"],
+    "type": "Buah",
+    "schedule": [2, 5],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1614735241165-6756e1df61ab?auto=format&fit=crop&w=600&q=80"
+  },
+  "Raphanus Sativus": {
+    "name_id": "Lobak",
+    "aliases": ["radish", "daikon"],
+    "type": "Sayur",
+    "schedule": [1, 3, 5],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1590400032959-19b0d2d61f55?auto=format&fit=crop&w=600&q=80"
+  },
+  "Rosa": {
+    "name_id": "Mawar",
+    "aliases": ["rose", "ros"],
+    "type": "Bunga",
+    "schedule": [1, 4],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1496062031456-07b8f162a322?auto=format&fit=crop&w=600&q=80"
+  },
+  "Salacca Zalacca": {
+    "name_id": "Salak",
+    "aliases": ["snake fruit", "salak"],
+    "type": "Buah",
+    "schedule": [2, 5],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1616859397858-e15cb5705335?auto=format&fit=crop&w=600&q=80"
+  },
+  "Sansevieria": {
+    "name_id": "Lidah Mertua",
+    "aliases": ["snake plant", "sansevieria"],
+    "type": "Hias",
+    "schedule": [0],
+    "fert": [4],
+    "img": "https://images.unsplash.com/photo-1593482886870-79814a1a3843?auto=format&fit=crop&w=600&q=80"
+  },
+  "Sechium Edule": {
+    "name_id": "Labu Siam",
+    "aliases": ["chayote", "jipang"],
+    "type": "Sayur",
+    "schedule": [1, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1593345862024-e69c0d75a852?auto=format&fit=crop&w=600&q=80"
+  },
+  "Solanum Lycopersicum": {
+    "name_id": "Tomat",
+    "aliases": ["tomato", "rangam"],
+    "type": "Sayur",
+    "schedule": [0, 2, 4, 6],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80"
+  },
+  "Solanum Melongena": {
+    "name_id": "Terong",
+    "aliases": ["eggplant", "aubergine"],
+    "type": "Sayur",
+    "schedule": [1, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1615485925694-a6dd997724a6?auto=format&fit=crop&w=600&q=80"
+  },
+  "Spathiphyllum": {
+    "name_id": "Peace Lily",
+    "aliases": ["peace lily", "lili perdamaian"],
+    "type": "Hias",
+    "schedule": [1, 4],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1593691509543-c55ce32ebee2?auto=format&fit=crop&w=600&q=80"
+  },
+  "Spinacia Oleracea": {
+    "name_id": "Bayam",
+    "aliases": ["spinach", "bayam hijau"],
+    "type": "Sayur",
+    "schedule": [1, 3, 5],
+    "fert": [1],
+    "img": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80"
+  },
+  "Syzygium Aqueum": {
+    "name_id": "Jambu Air",
+    "aliases": ["water apple", "bell fruit"],
+    "type": "Buah",
+    "schedule": [0, 2, 4, 6],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1596444368595-d2d0c242c77a?auto=format&fit=crop&w=600&q=80"
+  },
+  "Vigna Unguiculata": {
+    "name_id": "Kacang Panjang",
+    "aliases": ["long beans", "yardlong bean"],
+    "type": "Sayur",
+    "schedule": [0, 2, 4],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=600&q=80"
+  },
+  "Zingiber Officinale": {
+    "name_id": "Jahe",
+    "aliases": ["ginger"],
+    "type": "Herbal",
+    "schedule": [3],
+    "fert": [3],
+    "img": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80"
+  },
+  "Zinnia Elegans": {
+    "name_id": "Zinnia",
+    "aliases": ["kembang kertas"],
+    "type": "Bunga",
+    "schedule": [0, 3, 6],
+    "fert": [2],
+    "img": "https://images.unsplash.com/photo-1508713331901-4031fd0c6783?auto=format&fit=crop&w=600&q=80"
+  }
+}

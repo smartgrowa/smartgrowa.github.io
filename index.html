@@ -1,0 +1,5139 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#059669" />
+    <link rel="icon" href="logo-1.png" type="image/x-icon" />
+    <title>Smart Growa</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="logo-1.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#059669" />
+    <meta name="apple-mobile-web-app-title" content="SmartGrowa" />
+
+    <style>
+      /* --- LOGIN SCREEN STYLE --- */
+      #loginScreen {
+        position: fixed;
+        inset: 0;
+        background: var(--bg-body);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
+      #userInfo {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        margin-right: 15px;
+      }
+      #userPhoto {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid var(--primary);
+      }
+      /* --- STYLE ASLI --- */
+      :root {
+        --primary: #059669;
+        --primary-light: #d1fae5;
+        --bg-body: #f8fafc;
+        --bg-surface: #ffffff;
+        --bg-card: #ffffff;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --danger: #ef4444;
+        --danger-bg: #fef2f2;
+        --danger-border: #fca5a5;
+        --money-in: #10b981;
+        --money-out: #f43f5e;
+      }
+
+      [data-theme="dark"] {
+        --primary: #10b981;
+        --primary-light: #064e3b;
+        --bg-body: #0f172a;
+        --bg-surface: #1e293b;
+        --bg-card: #1e293b;
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+        --border: #334155;
+        --shadow-sm: none;
+        --shadow-md: none;
+        --danger: #f87171;
+        --danger-bg: #450a0a;
+        --danger-border: #7f1d1d;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+        transition: background 0.3s;
+      }
+
+      .sidebar {
+        width: 260px;
+        background: var(--bg-surface);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem;
+        z-index: 50;
+        transition: 0.3s;
+      }
+      .brand {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .nav-link {
+        padding: 0.9rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: var(--radius-md);
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      .nav-link:hover {
+        background: var(--bg-body);
+        color: var(--primary);
+      }
+      .nav-link.active {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+
+      .main-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        position: relative;
+        scroll-behavior: smooth;
+      }
+
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+      }
+      .header-title h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .header-title p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .digital-clock {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-main);
+        letter-spacing: -1px;
+        line-height: 1;
+      }
+      .date-display {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-top: 5px;
+      }
+
+      .theme-toggle {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-left: 10px;
+      }
+      .theme-toggle:hover {
+        color: var(--text-main);
+        border-color: var(--text-muted);
+      }
+
+      .weather-banner {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem 2rem;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+        position: relative;
+        overflow: hidden;
+      }
+      .weather-banner::before {
+        content: "";
+        position: absolute;
+        right: -20px;
+        top: -50px;
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+      }
+      .weather-info h2 {
+        font-size: 2rem;
+        font-weight: 800;
+      }
+      .weather-info p {
+        opacity: 0.9;
+        margin-top: 5px;
+        font-weight: 500;
+      }
+      .weather-icon {
+        font-size: 3rem;
+        opacity: 0.9;
+      }
+
+      .rain-delay-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        margin-top: 10px;
+        display: none;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+      }
+      .rain-delay-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        background: var(--bg-card);
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        transition: 0.3s;
+      }
+      .stat-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+      }
+      .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary);
+      }
+      .stat-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 1.2rem;
+      }
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-main);
+      }
+      .stat-label {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .action-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      .search-wrapper {
+        position: relative;
+        flex: 1;
+        min-width: 250px;
+      }
+      .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+      }
+      .search-input {
+        width: 100%;
+        padding: 0.8rem 1rem 0.8rem 2.8rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        outline: none;
+        background: var(--bg-surface);
+        color: var(--text-main);
+        transition: 0.3s;
+        box-sizing: border-box;
+      }
+      .search-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+
+      #sortSelect {
+        padding-left: 1rem;
+        min-width: 180px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+
+      .btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s;
+        font-size: 0.9rem;
+        justify-content: center;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #047857;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+      .btn-secondary {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        color: var(--text-main);
+      }
+      .btn-secondary:hover {
+        background: var(--bg-body);
+        border-color: #cbd5e1;
+      }
+      .btn-danger {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+      .btn-danger:hover {
+        background: #fecaca;
+      }
+      .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      .plant-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .plant-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+      }
+      .plant-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .plant-card.is-sick {
+        border: 2px solid var(--danger);
+        background-color: var(--danger-bg);
+      }
+      .plant-card.is-sick .status-pill {
+        background: white;
+        border-color: var(--danger-border);
+        color: var(--danger);
+      }
+
+      .plant-img-wrapper {
+        height: 180px;
+        position: relative;
+        overflow: hidden;
+        background: #e2e8f0;
+      }
+      .plant-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.5s;
+      }
+      .plant-card:hover .plant-img {
+        transform: scale(1.08);
+      }
+
+      .card-body {
+        padding: 1.25rem;
+      }
+      .badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-block;
+        margin-bottom: 8px;
+      }
+
+      .status-pill {
+        margin-top: 12px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: var(--bg-body);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .status-pill.urgent {
+        background: #fef2f2;
+        color: #dc2626;
+        border-color: #fecaca;
+        animation: pulse 2s infinite;
+      }
+      .status-pill.today {
+        background: #eff6ff;
+        color: #3b82f6;
+        border-color: #bfdbfe;
+      }
+
+      .health-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      .health-badge.sick {
+        background: var(--danger);
+        color: white;
+      }
+
+      .alert-banner {
+        background: var(--danger-bg);
+        border: 1px solid var(--danger-border);
+        color: var(--danger);
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: fadeIn 0.5s;
+      }
+
+      .finance-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        border-radius: 8px;
+        margin-bottom: 5px;
+      }
+      .finance-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      .finance-row:hover {
+        background-color: var(--bg-body);
+        transform: translateX(5px);
+      }
+      .finance-actions {
+        opacity: 0;
+        transition: 0.2s;
+        display: flex;
+        gap: 8px;
+      }
+      .finance-row:hover .finance-actions {
+        opacity: 1;
+      }
+      .amount-in {
+        color: var(--money-in);
+        font-weight: 700;
+      }
+      .amount-out {
+        color: var(--money-out);
+        font-weight: 700;
+      }
+
+      .chart-container-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 100;
+        display: none;
+        place-items: center;
+        opacity: 0;
+        transition: 0.3s;
+      }
+      .modal-overlay.active {
+        display: grid;
+        opacity: 1;
+      }
+
+      .modal-box {
+        background: var(--bg-card);
+        width: 90%;
+        max-width: 550px;
+        max-height: 90vh;
+        border-radius: var(--radius-lg);
+        overflow-y: auto;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        transform: scale(0.9);
+        transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid var(--border);
+      }
+      .modal-overlay.active .modal-box {
+        transform: scale(1);
+      }
+
+      .form-group {
+        margin-bottom: 1.2rem;
+      }
+      .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--text-main);
+      }
+      .smart-suggestion {
+        font-size: 0.8rem;
+        color: var(--primary);
+        margin-top: 4px;
+        display: none;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+
+      .day-selector-container {
+        display: flex;
+        gap: 8px;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      .day-check {
+        flex: 1;
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        background: var(--bg-body);
+        transition: 0.2s;
+        user-select: none;
+      }
+      .day-check.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+      .day-check.fert-active {
+        background: #f59e0b;
+        color: white;
+        border-color: #f59e0b;
+      }
+      .day-check:hover:not(.active):not(.fert-active) {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+
+      .img-preview-container {
+        width: 100%;
+        height: 150px;
+        background: #f1f5f9;
+        border-radius: 8px;
+        margin-top: 10px;
+        display: none;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .img-preview-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sensor-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      .sensor-input-group {
+        position: relative;
+      }
+      .sensor-unit {
+        position: absolute;
+        right: 12px;
+        top: 38px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+      .analysis-result-card {
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+        margin-top: 1.5rem;
+        display: none;
+        border: 1px solid transparent;
+        animation: fadeIn 0.4s;
+      }
+      .analysis-optimal {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #065f46;
+      }
+      .analysis-warning {
+        background: #fffbeb;
+        border-color: #fcd34d;
+        color: #92400e;
+      }
+      .analysis-critical {
+        background: #fef2f2;
+        border-color: #fca5a5;
+        color: #991b1b;
+      }
+
+      .health-parameter-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        font-size: 0.9rem;
+      }
+      .param-status {
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+      .status-ok {
+        color: var(--primary);
+      }
+      .status-bad {
+        color: var(--danger);
+      }
+
+      /* --- FOOTER STYLE --- */
+      .app-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        width: 100%;
+      }
+
+      .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        text-align: center;
+      }
+
+      .footer-brand {
+        font-weight: 700;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0.8;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.85rem;
+      }
+
+      .footer-links a {
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: color 0.2s;
+        font-weight: 500;
+      }
+
+      .footer-links a:hover {
+        color: var(--primary);
+      }
+
+      .footer-copyright {
+        font-size: 0.8rem;
+        opacity: 0.6;
+      }
+
+      /* Desktop specific adjustment for footer */
+      @media (min-width: 769px) {
+        .footer-content {
+          flex-direction: row;
+          justify-content: space-between;
+          text-align: left;
+        }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 100%;
+          height: auto;
+          flex-direction: row;
+          justify-content: space-around;
+          padding: 12px;
+          border-top: 1px solid var(--border);
+          border-right: none;
+          position: fixed;
+          bottom: 0;
+          order: 2;
+          background: var(--bg-surface);
+          box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
+        }
+        .brand {
+          display: none;
+        }
+        .nav-link {
+          flex-direction: column;
+          gap: 4px;
+          font-size: 0.7rem;
+          padding: 0.5rem;
+          margin: 0;
+          border-radius: 8px;
+        }
+        .nav-link i {
+          font-size: 1.2rem;
+        }
+        .main-content {
+          order: 1;
+          padding: 1.5rem;
+          padding-bottom: 100px;
+        }
+        .header-title h1 {
+          font-size: 1.5rem;
+        }
+        .weather-banner {
+          flex-direction: column;
+          text-align: center;
+          gap: 1rem;
+        }
+        .weather-banner::before {
+          display: none;
+        }
+        .header-row {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .digital-clock {
+          font-size: 2rem;
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100px);
+        background: #1e293b;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* --- TAMBAHAN STYLE UNTUK HIDROPONIK --- */
+      .method-switch {
+        display: flex;
+        background: var(--bg-body);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px;
+        margin-bottom: 1.2rem;
+      }
+      .method-opt {
+        flex: 1;
+        padding: 8px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: 0.3s;
+        color: var(--text-muted);
+      }
+      .method-opt.active {
+        background: white;
+        color: var(--primary);
+        box-shadow: var(--shadow-sm);
+      }
+      .method-opt.active-hydro {
+        background: #0ea5e9;
+        color: white;
+      }
+
+      .badge.hydro {
+        background: #e0f2fe;
+        color: #0284c7;
+        border: 1px solid #bae6fd;
+      }
+      .hydro-section {
+        display: none;
+        animation: fadeIn 0.3s;
+      }
+
+      /* Indikator Flush/Kuras */
+      .day-check.flush-active {
+        background: #0ea5e9;
+        color: white;
+        border-color: #0ea5e9;
+      }
+      .day-check:hover:not(.active):not(.fert-active):not(.flush-active) {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loginScreen">
+      <img
+        src="logo-2.png"
+        alt="SmartGrowa"
+        style="height: 20rem; margin-bottom: 1rem"
+      />
+      <p style="color: var(--text-muted); margin-bottom: 2rem">
+        Masuk untuk mengakses kebun virtual Anda.
+      </p>
+
+      <button class="btn btn-primary" onclick="app.loginGoogle()">
+        <i class="fa-brands fa-google"></i> Masuk dengan Google
+      </button>
+    </div>
+    <nav class="sidebar">
+      <div class="brand">
+        <img
+          src="logo-1.png"
+          alt="SmartGrowa"
+          style="height: 2.2em; vertical-align: middle; margin-right: 0.4em"
+        />
+        SmartGrowa
+      </div>
+      <div class="nav-link active" onclick="app.switchTab('dashboard')">
+        <i class="fa-solid fa-chart-pie"></i> <span>Beranda</span>
+      </div>
+      <div class="nav-link" onclick="app.switchTab('garden')">
+        <i class="fa-solid fa-seedling"></i> <span>Tanaman</span>
+      </div>
+      <div class="nav-link" onclick="app.switchTab('calculator')">
+        <i class="fa-solid fa-calculator"></i> <span>Kalkulator</span>
+      </div>
+      <div class="nav-link" onclick="app.switchTab('finance')">
+        <i class="fa-solid fa-wallet"></i> <span>Keuangan</span>
+      </div>
+      <div class="nav-link" onclick="app.switchTab('settings')">
+        <i class="fa-solid fa-sliders"></i> <span>Pengaturan</span>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <section id="dashboard" class="view-section">
+        <div class="header-row">
+          <div class="header-title">
+            <h1 id="greeting">Selamat Pagi</h1>
+            <div id="userInfo" style="margin-top: 5px">
+              <img id="userPhoto" src="" alt="" />
+              <span id="userName" style="font-size: 0.9rem; font-weight: 600"
+                >User</span
+              >
+              <button
+                class="btn btn-sm btn-danger"
+                onclick="app.logout()"
+                style="margin-left: 10px; padding: 4px 8px"
+              >
+                <i class="fa-solid fa-right-from-bracket"></i>
+              </button>
+            </div>
+          </div>
+
+          <div style="text-align: right">
+            <div id="clockDisplay" class="digital-clock">00:00:00</div>
+            <div
+              id="dateDisplay"
+              style="
+                font-size: 0.9rem;
+                color: var(--text-muted);
+                margin-top: 4px;
+              "
+            >
+              -- / -- / ----
+            </div>
+          </div>
+        </div>
+
+        <div id="sickAlertContainer"></div>
+
+        <div class="weather-banner">
+          <div class="weather-info">
+            <h2 id="weatherTemp">--°C</h2>
+            <p id="weatherDesc">Memuat Cuaca...</p>
+            <div
+              style="
+                margin-top: 10px;
+                font-size: 0.9rem;
+                background: rgba(255, 255, 255, 0.2);
+                padding: 5px 12px;
+                border-radius: 20px;
+                display: inline-block;
+              "
+            >
+              <i class="fa-solid fa-droplet"></i> Tips: Cuaca panas, cek
+              kelembaban tanah.
+            </div>
+            <button
+              id="rainDelayBtn"
+              class="rain-delay-btn"
+              onclick="app.applyRainDelay()"
+            >
+              <i class="fa-solid fa-clock"></i> Lewati Jadwal Hari Ini (Hujan)
+            </button>
+          </div>
+          <div class="weather-icon">
+            <i class="fa-solid fa-cloud"></i>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="card stat-card">
+            <div class="stat-head">
+              <span class="stat-label">TOTAL TANAMAN</span>
+              <div
+                class="stat-icon"
+                style="background: #ecfdf5; color: #10b981"
+              >
+                <i class="fa-solid fa-tree"></i>
+              </div>
+            </div>
+            <div class="stat-value" id="totalCount">0</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-head">
+              <span class="stat-label">SIRAM HARI INI</span>
+              <div
+                class="stat-icon"
+                style="background: #eff6ff; color: #3b82f6"
+              >
+                <i class="fa-solid fa-droplet"></i>
+              </div>
+            </div>
+            <div class="stat-value" id="waterCount">0</div>
+            <button
+              id="bulkWaterBtn"
+              class="btn btn-primary btn-sm"
+              style="margin-top: 5px; display: none"
+              onclick="app.waterAllDue()"
+            >
+              <i class="fa-solid fa-check-double"></i> Siram Semua (Cepat)
+            </button>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-head">
+              <span class="stat-label">SKOR PERAWATAN</span>
+              <div
+                class="stat-icon"
+                style="background: #fdf4ff; color: #d946ef"
+              >
+                <i class="fa-solid fa-heart-pulse"></i>
+              </div>
+            </div>
+            <div class="stat-value" id="careScore">0%</div>
+            <small style="color: var(--text-muted); font-size: 0.75rem"
+              >Keberhasilan Rutinitas</small
+            >
+          </div>
+          <div class="card stat-card">
+            <div class="stat-head">
+              <span class="stat-label">SALDO KEBUN</span>
+              <div
+                class="stat-icon"
+                style="background: #ecfdf5; color: #059669"
+              >
+                <i class="fa-solid fa-money-bill-wave"></i>
+              </div>
+            </div>
+            <div class="stat-value" id="dashBalance" style="font-size: 1.5rem">
+              Rp 0
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container-row">
+          <div class="card">
+            <h3 style="margin-bottom: 1.5rem">Sebaran Ekosistem</h3>
+            <div style="height: 250px">
+              <canvas id="plantChart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom: 1.5rem">Keuangan: Masuk vs Keluar</h3>
+            <div style="height: 250px">
+              <canvas id="financeChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem">Aktivitas Jurnal (Pertumbuhan)</h3>
+          <div style="height: 200px">
+            <canvas id="growthChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="finance" class="view-section" style="display: none">
+        <div class="header-row">
+          <div class="header-title">
+            <h1>Manajemen Keuangan</h1>
+            <p>Catat pengeluaran (pupuk, bibit) dan pemasukan (panen).</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="card stat-card">
+            <span class="stat-label">PEMASUKAN</span>
+            <div
+              class="stat-value"
+              id="totalIncome"
+              style="color: var(--money-in)"
+            >
+              Rp 0
+            </div>
+          </div>
+          <div class="card stat-card">
+            <span class="stat-label">PENGELUARAN</span>
+            <div
+              class="stat-value"
+              id="totalExpense"
+              style="color: var(--money-out)"
+            >
+              Rp 0
+            </div>
+          </div>
+          <div class="card stat-card">
+            <span class="stat-label">SALDO AKHIR</span>
+            <div class="stat-value" id="netBalance">Rp 0</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 2rem">
+          <h3 style="margin-bottom: 1.5rem">Analisis Hasil Panen (Kg)</h3>
+          <div style="height: 250px">
+            <canvas id="harvestChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 1.5rem;
+            "
+          >
+            <h3>Riwayat Transaksi</h3>
+            <button
+              class="btn btn-primary btn-sm"
+              onclick="app.openFinanceModal()"
+            >
+              <i class="fa-solid fa-plus"></i> Catat Transaksi
+            </button>
+          </div>
+          <div id="transactionList" style="max-height: 400px; overflow-y: auto">
+            <div
+              style="
+                text-align: center;
+                padding: 2rem;
+                color: var(--text-muted);
+              "
+            >
+              Belum ada transaksi.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="garden" class="view-section" style="display: none">
+        <div class="header-row">
+          <div class="header-title">
+            <h1>Koleksi Tanaman</h1>
+            <p>Kelola jadwal perawatan berbasis hari mingguan.</p>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Cari tanaman..."
+              id="plantSearch"
+              onkeyup="app.renderGrid()"
+            />
+          </div>
+          <select
+            class="search-input"
+            style="width: auto; flex: 0 0 auto"
+            id="sortSelect"
+            onchange="app.renderGrid()"
+          >
+            <option value="urgency">Urutkan: Jadwal Terdekat</option>
+            <option value="az">Urutkan: A-Z</option>
+            <option value="newest">Urutkan: Terbaru</option>
+          </select>
+
+          <button class="btn btn-primary" onclick="app.openFormModal()">
+            <i class="fa-solid fa-plus"></i> <span>Tambah Baru</span>
+          </button>
+        </div>
+
+        <div class="plant-grid" id="plantGrid"></div>
+      </section>
+
+      <section id="calculator" class="view-section" style="display: none">
+        <div class="header-row">
+          <div class="header-title">
+            <h1>Kalkulator Nutrisi</h1>
+            <p>Hitung dosis AB Mix presisi berdasarkan kalibrasi PPM.</p>
+            <ol
+              style="
+                margin-top: 0.75rem;
+                padding-left: 1.2rem;
+                font-size: 0.9rem;
+                color: var(--text-muted);
+                line-height: 1.5;
+              "
+            >
+              <li>
+                <strong>Langkah A (Sekali saja / ganti merek):</strong>
+                <ul style="margin: 0.25rem 0 0.5rem 1rem; list-style: disc">
+                  <li>
+                    Siapkan 1 L air bersih, tambahkan 5 ml Nutrisi A & B, lalu
+                    ukur PPM-nya.
+                  </li>
+                  <li>
+                    Masukkan hasil ke <em>Bagian 01 Kalibrasi</em> lalu klik
+                    “Simpan Data Kalibrasi”.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <strong>Langkah B (Rutin):</strong>
+                <ul style="margin: 0.25rem 0 0 1rem; list-style: disc">
+                  <li>
+                    Cek PPM tandon → buka <em>Bagian 02 Hitung Takaran</em>.
+                  </li>
+                  <li>
+                    Isi volume tandon, PPM saat ini & target, lalu klik “Hitung
+                    Sekarang”.
+                  </li>
+                  <li>Tuang dosis yang tertera langsung ke tandon utama.</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div
+          class="grid-layout"
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+          "
+        >
+          <div class="card">
+            <h3
+              style="
+                margin-bottom: 1rem;
+                color: var(--primary);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <span>01</span> Kalibrasi Kepekatan
+            </h3>
+            <p
+              style="
+                color: var(--text-muted);
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+              "
+            >
+              Lakukan ini sekali saja untuk setiap merek nutrisi baru. Siapkan 1
+              Liter air baku.
+            </p>
+
+            <div class="form-group">
+              <label class="form-label">Volume Air Uji (Liter)</label>
+              <input
+                type="number"
+                id="cal_vol_air"
+                class="search-input"
+                placeholder="Contoh: 1"
+                step="0.1"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dosis Pekatan (ml)</label>
+              <input
+                type="number"
+                id="cal_dosis"
+                class="search-input"
+                placeholder="Contoh: 5"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">PPM Air Baku (Awal)</label>
+              <input
+                type="number"
+                id="cal_ppm_awal"
+                class="search-input"
+                placeholder="0"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">PPM Hasil Campuran (Akhir)</label>
+              <input
+                type="number"
+                id="cal_ppm_akhir"
+                class="search-input"
+                placeholder="0"
+              />
+            </div>
+
+            <button
+              class="btn btn-primary"
+              style="width: 100%; margin-top: 10px"
+              onclick="app.runCalibration()"
+            >
+              Simpan Data Kalibrasi
+            </button>
+
+            <div
+              id="calibrationStatus"
+              class="status-pill error"
+              style="margin-top: 15px; width: fit-content"
+            >
+              ⚠️ Belum Kalibrasi
+            </div>
+          </div>
+
+          <div class="card">
+            <h3
+              style="
+                margin-bottom: 1rem;
+                color: var(--primary);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <span>02</span> Hitung Takaran Tandon
+            </h3>
+            <p
+              style="
+                color: var(--text-muted);
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+              "
+            >
+              Hitung berapa ml nutrisi yang dibutuhkan untuk tandon utama.
+            </p>
+
+            <div class="form-group">
+              <label class="form-label">Volume Total Tandon (Liter)</label>
+              <input
+                type="number"
+                id="main_vol_tandon"
+                class="search-input"
+                placeholder="Contoh: 100"
+              />
+            </div>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px"
+            >
+              <div class="form-group">
+                <label class="form-label">PPM Saat Ini</label>
+                <input
+                  type="number"
+                  id="main_ppm_awal"
+                  class="search-input"
+                  placeholder="0"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Target PPM</label>
+                <input
+                  type="number"
+                  id="main_ppm_target"
+                  class="search-input"
+                  placeholder="1200"
+                />
+              </div>
+            </div>
+
+            <button
+              class="btn btn-primary"
+              style="width: 100%; margin-top: 10px"
+              onclick="app.calculateNutrient()"
+            >
+              <i class="fa-solid fa-flask"></i> Hitung Sekarang
+            </button>
+
+            <div
+              id="calcResultBox"
+              style="
+                background: var(--primary-light);
+                border: 1px solid var(--primary);
+                border-radius: 12px;
+                padding: 20px;
+                margin-top: 20px;
+                text-align: center;
+                display: none;
+              "
+            >
+              <p
+                style="
+                  font-size: 0.9rem;
+                  font-weight: 600;
+                  color: var(--primary-dark);
+                "
+              >
+                Tambahkan Dosis (A & B):
+              </p>
+              <div
+                id="calcResultVal"
+                style="
+                  font-size: 2.5rem;
+                  font-weight: 800;
+                  color: var(--primary);
+                  margin: 5px 0;
+                "
+              >
+                0 ml
+              </div>
+              <p
+                id="calcResultDetail"
+                style="font-size: 0.8rem; color: var(--text-muted)"
+              ></p>
+            </div>
+
+            <button
+              class="btn btn-secondary"
+              style="
+                width: 100%;
+                margin-top: 20px;
+                color: var(--danger);
+                border-color: var(--danger-border);
+              "
+              onclick="app.resetCalibration()"
+            >
+              Reset Kalibrasi
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="view-section" style="display: none">
+        <div class="header-row">
+          <div class="header-title">
+            <h1>Pengaturan</h1>
+          </div>
+        </div>
+
+        <div class="card" style="max-width: 600px">
+          <h3 style="margin-bottom: 1rem">Manajemen Data</h3>
+          <p
+            style="
+              color: var(--text-muted);
+              margin-bottom: 1.5rem;
+              line-height: 1.6;
+            "
+          >
+            Ekspor data Anda secara berkala dalam format JSON agar aman, atau
+            unduh laporan CSV untuk Excel.
+          </p>
+
+          <div
+            style="
+              display: flex;
+              gap: 10px;
+              margin-bottom: 20px;
+              flex-wrap: wrap;
+            "
+          >
+            <button class="btn btn-primary" onclick="app.exportData()">
+              <i class="fa-solid fa-download"></i> Backup JSON
+            </button>
+            <button class="btn btn-secondary" onclick="app.exportCSV()">
+              <i class="fa-solid fa-file-csv"></i> Laporan Excel
+            </button>
+            <button
+              class="btn btn-secondary"
+              onclick="document.getElementById('importFile').click()"
+            >
+              <i class="fa-solid fa-upload"></i> Restore
+            </button>
+            <input
+              type="file"
+              id="importFile"
+              style="display: none"
+              onchange="app.importData(this)"
+            />
+          </div>
+
+          <div
+            style="
+              padding: 15px;
+              background: var(--bg-body);
+              border-radius: 8px;
+              font-size: 0.9rem;
+            "
+          >
+            <i class="fa-solid fa-database" style="color: var(--primary)"></i>
+            Storage terpakai: <span id="storageUsed">0</span> KB
+          </div>
+
+          <div
+            style="
+              margin-top: 20px;
+              border-top: 1px solid var(--border);
+              padding-top: 20px;
+            "
+          >
+            <h3 style="margin-bottom: 1rem">Notifikasi</h3>
+            <p
+              style="
+                color: var(--text-muted);
+                margin-bottom: 1.5rem;
+                font-size: 0.9rem;
+              "
+            >
+              Aktifkan notifikasi browser untuk mendapatkan pengingat penyiraman
+              sesuai hari.
+            </p>
+            <button
+              class="btn btn-secondary"
+              onclick="app.requestNotification()"
+            >
+              <i class="fa-solid fa-bell"></i> Minta Izin Notifikasi
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        <div class="footer-content">
+          <div class="footer-left">
+            <div class="footer-brand">
+              <img
+                src="logo-1.png"
+                alt="leaf"
+                style="height: 2em; vertical-align: middle; margin-right: 0.3em"
+              />
+              Smart Growa
+            </div>
+            <p class="footer-copyright" style="margin-top: 5px">
+              &copy;
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              MADNN Smart Farming Assistant.
+            </p>
+          </div>
+
+          <div class="footer-links">
+            <a
+              href="https://www.tiktok.com/@keutiwaw"
+              onclick="alert('Tambahkan tanaman dm @keutiwaw untuk bantuan')"
+              >Bantuan</a
+            >
+            <a href="#" onclick="app.toggleTheme()">Ubah Tema</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <div class="modal-overlay" id="financeModal">
+      <div class="modal-box">
+        <div style="padding: 2rem">
+          <h2 style="margin-bottom: 1.5rem">Catat Transaksi</h2>
+          <form id="financeForm">
+            <div class="form-group">
+              <label class="form-label">Jenis</label>
+              <select
+                id="fType"
+                class="search-input"
+                onchange="app.toggleFinanceCat()"
+              >
+                <option value="in">Pemasukan (Panen/Jual)</option>
+                <option value="out">Pengeluaran (Beli/Rawat)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nominal (Rp)</label>
+              <input
+                type="number"
+                id="fAmount"
+                class="search-input"
+                placeholder="0"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Keterangan</label>
+              <input
+                type="text"
+                id="fDesc"
+                class="search-input"
+                placeholder="Contoh: Jual Cabai 1kg"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tanggal</label>
+              <input type="date" id="fDate" class="search-input" required />
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 2rem">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                style="flex: 1"
+                onclick="app.closeModal('financeModal')"
+              >
+                Batal
+              </button>
+              <button type="submit" class="btn btn-primary" style="flex: 1">
+                Simpan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="formModal">
+      <div class="modal-box">
+        <div style="padding: 2rem">
+          <h2 style="margin-bottom: 0.5rem" id="formTitle">Tambah Tanaman</h2>
+
+          <form id="plantForm">
+            <input type="hidden" id="pId" />
+
+            <div class="form-group">
+              <label class="form-label">Metode Tanam</label>
+              <div class="method-switch">
+                <div
+                  class="method-opt active"
+                  id="optSoil"
+                  onclick="app.setMethod('soil')"
+                >
+                  <i class="fa-solid fa-mound"></i> Media Tanah
+                </div>
+                <div
+                  class="method-opt"
+                  id="optHydro"
+                  onclick="app.setMethod('hydro')"
+                >
+                  <i class="fa-solid fa-water"></i> Hidroponik
+                </div>
+              </div>
+              <input type="hidden" id="pMethod" value="soil" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Nama Tanaman (Latin / Indonesia)</label>
+              <input
+                type="text"
+                id="pName"
+                class="search-input"
+                placeholder="Contoh: capsicum annuum"
+                required
+                onkeyup="app.checkPresets(this.value)"
+              />
+              <div
+                id="presetHint"
+                class="smart-suggestion"
+                onclick="app.applyPreset()"
+              >
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Jadwal otomatis
+                tersedia! Klik untuk isi.
+              </div>
+            </div>
+
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px"
+            >
+              <div class="form-group">
+                <label class="form-label">Kategori</label>
+                <select id="pType" class="search-input">
+                  <option value="Sayur">Sayur</option>
+                  <option value="Bunga">Bunga</option>
+                  <option value="Buah">Buah</option>
+                  <option value="Hias">Hias</option>
+                  <option value="Herbal">Herbal</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tgl Tanam</label>
+                <input type="date" id="pDate" class="search-input" required />
+              </div>
+            </div>
+
+            <div
+              style="
+                background: var(--bg-body);
+                padding: 1rem;
+                border-radius: var(--radius-md);
+                border: 1px dashed var(--primary);
+                margin-bottom: 1rem;
+              "
+            >
+              <div class="form-group" style="margin-bottom: 0.5rem">
+                <label
+                  class="form-label"
+                  style="color: var(--primary)"
+                  id="lblWaterAction"
+                >
+                  <i class="fa-solid fa-droplet"></i> Jadwal Siram Mingguan
+                </label>
+                <div class="day-selector-container" id="waterDayContainer">
+                  <div
+                    class="day-check"
+                    data-day="1"
+                    onclick="app.toggleDay(this, 'water')"
+                  >
+                    Sen
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="2"
+                    onclick="app.toggleDay(this, 'water')"
+                  >
+                    Sel
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="3"
+                    onclick="app.toggleDay(this, 'water')"
+                  >
+                    Rab
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="4"
+                    onclick="app.toggleDay(this, 'water')"
+                  >
+                    Kam
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="5"
+                    onclick="app.toggleDay(this, 'water')"
+                  >
+                    Jum
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="6"
+                    onclick="app.toggleDay(this, 'water')"
+                  >
+                    Sab
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="0"
+                    onclick="app.toggleDay(this, 'water')"
+                  >
+                    Min
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="hydroFlushSection"
+              class="hydro-section"
+              style="
+                background: #e0f2fe;
+                padding: 1rem;
+                border-radius: var(--radius-md);
+                border: 1px dashed #0284c7;
+                margin-bottom: 1rem;
+              "
+            >
+              <div class="form-group" style="margin-bottom: 0.5rem">
+                <label class="form-label" style="color: #0284c7">
+                  <i class="fa-solid fa-rotate"></i> Jadwal Kuras & Ganti
+                  Nutrisi
+                </label>
+                <div style="display: flex; align-items: center; gap: 10px">
+                  <span style="font-size: 0.9rem">Setiap</span>
+                  <input
+                    type="number"
+                    id="hydroFlushFreq"
+                    class="search-input"
+                    style="
+                      width: 70px;
+                      text-align: center;
+                      padding-left: 0.5rem;
+                    "
+                    min="1"
+                    step="1"
+                    inputmode="numeric"
+                    placeholder="7"
+                  />
+                  <span style="font-size: 0.9rem">hari sekali</span>
+                </div>
+                <div
+                  style="
+                    font-size: 0.75rem;
+                    color: #0369a1;
+                    margin-top: 5px;
+                    opacity: 0.8;
+                  "
+                >
+                  *Gabungan jadwal kuras bak dan penggantian nutrisi AB Mix
+                  baru.
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="commonFertSection"
+              style="
+                background: #fffbeb;
+                padding: 1rem;
+                border-radius: var(--radius-md);
+                border: 1px dashed #f59e0b;
+                margin-bottom: 1.2rem;
+              "
+            >
+              <div class="form-group" style="margin-bottom: 0.5rem">
+                <label class="form-label" style="color: #b45309"
+                  ><i class="fa-solid fa-flask"></i> Jadwal Pupuk
+                  Mingguan</label
+                >
+                <div class="day-selector-container" id="fertDayContainer">
+                  <div
+                    class="day-check"
+                    data-day="1"
+                    onclick="app.toggleDay(this, 'fert')"
+                  >
+                    Sen
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="2"
+                    onclick="app.toggleDay(this, 'fert')"
+                  >
+                    Sel
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="3"
+                    onclick="app.toggleDay(this, 'fert')"
+                  >
+                    Rab
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="4"
+                    onclick="app.toggleDay(this, 'fert')"
+                  >
+                    Kam
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="5"
+                    onclick="app.toggleDay(this, 'fert')"
+                  >
+                    Jum
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="6"
+                    onclick="app.toggleDay(this, 'fert')"
+                  >
+                    Sab
+                  </div>
+                  <div
+                    class="day-check"
+                    data-day="0"
+                    onclick="app.toggleDay(this, 'fert')"
+                  >
+                    Min
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Foto</label>
+              <input
+                type="file"
+                id="pImageInput"
+                accept="image/*"
+                class="search-input"
+              />
+              <div id="imgPreviewBox" class="img-preview-container">
+                <img id="imgPreviewTag" src="" />
+              </div>
+              <small
+                style="
+                  color: var(--text-muted);
+                  font-size: 0.8rem;
+                  margin-top: 5px;
+                  display: block;
+                "
+              >
+                *Kosongkan jika ingin gambar otomatis.
+              </small>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 2rem">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                style="flex: 1"
+                onclick="app.closeModal('formModal')"
+              >
+                Batal
+              </button>
+              <button type="submit" class="btn btn-primary" style="flex: 1">
+                Simpan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="detailModal">
+      <div class="modal-box" style="max-width: 600px">
+        <div style="position: relative">
+          <div style="height: 250px; width: 100%">
+            <img
+              id="dImage"
+              src=""
+              style="width: 100%; height: 100%; object-fit: cover"
+            />
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                  to bottom,
+                  transparent 60%,
+                  rgba(0, 0, 0, 0.8)
+                );
+              "
+            ></div>
+          </div>
+          <button
+            onclick="app.closeModal('detailModal')"
+            style="
+              position: absolute;
+              top: 15px;
+              right: 15px;
+              background: rgba(255, 255, 255, 0.9);
+              border: none;
+              width: 36px;
+              height: 36px;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              z-index: 10;
+            "
+          >
+            <i class="fa-solid fa-times" style="color: #0f172a"></i>
+          </button>
+          <button
+            onclick="app.openEditForm()"
+            style="
+              position: absolute;
+              top: 15px;
+              right: 60px;
+              background: rgba(255, 255, 255, 0.9);
+              border: none;
+              width: 36px;
+              height: 36px;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              z-index: 10;
+            "
+          >
+            <i class="fa-solid fa-pencil" style="color: #0f172a"></i>
+          </button>
+
+          <div
+            style="position: absolute; bottom: 20px; left: 20px; color: white"
+          >
+            <span
+              id="dType"
+              class="badge"
+              style="
+                background: white;
+                color: var(--primary);
+                margin-bottom: 5px;
+              "
+              >Tipe</span
+            >
+            <span
+              id="dHealthStatus"
+              class="badge"
+              style="
+                background: var(--primary);
+                color: white;
+                margin-bottom: 5px;
+                margin-left: 5px;
+              "
+              >Sehat</span
+            >
+            <h2 id="dName" style="margin: 0; font-size: 1.8rem">
+              Nama Tanaman
+            </h2>
+            <p
+              id="dScheduleInfo"
+              style="font-size: 0.85rem; opacity: 0.9; margin-top: 4px"
+            >
+              Jadwal Siram: -
+            </p>
+            <p id="dFertInfo" style="font-size: 0.85rem; opacity: 0.9">
+              Jadwal Pupuk: -
+            </p>
+          </div>
+        </div>
+
+        <div style="padding: 1.5rem">
+          <div
+            id="actionBtnContainer"
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+              gap: 10px;
+              margin-bottom: 1rem;
+            "
+          ></div>
+
+          <div style="display: flex; gap: 10px; margin-bottom: 1.5rem">
+            <button
+              class="btn btn-danger btn-sm"
+              style="flex: 1"
+              onclick="app.deletePlant()"
+            >
+              <i class="fa-solid fa-trash"></i> Hapus
+            </button>
+          </div>
+
+          <h4
+            style="
+              margin-bottom: 1rem;
+              border-bottom: 1px solid var(--border);
+              padding-bottom: 8px;
+            "
+          >
+            Riwayat Aktivitas
+          </h4>
+          <div id="dTimeline" style="max-height: 200px; overflow-y: auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="qrModal">
+      <div class="modal-box" style="max-width: 400px; text-align: center">
+        <div style="padding: 2rem">
+          <h3 style="margin-bottom: 1rem">ID Card Tanaman</h3>
+          <div
+            id="printableArea"
+            class="id-card-container"
+            style="display: block"
+          >
+            <div class="id-card-header">SmartGrowa</div>
+            <img
+              id="qrImage"
+              src=""
+              style="width: 150px; height: 150px; margin: 10px 0"
+            />
+            <h2 id="qrName" style="margin: 5px 0">Nama</h2>
+            <p id="qrType" style="color: #666; font-size: 0.9rem">Tipe</p>
+            <div style="font-size: 0.7rem; color: #999; margin-top: 10px">
+              ID: <span id="qrId"></span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button
+              class="btn btn-secondary"
+              style="flex: 1"
+              onclick="app.closeModal('qrModal')"
+            >
+              Tutup
+            </button>
+            <button
+              class="btn btn-primary"
+              style="flex: 1"
+              onclick="window.print()"
+            >
+              <i class="fa-solid fa-print"></i> Cetak
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="clinicModal">
+      <div class="modal-box">
+        <div style="padding: 2rem">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 1.5rem;
+            "
+          >
+            <h2 style="margin: 0; color: var(--danger)">
+              <i class="fa-solid fa-notes-medical"></i> Klinik Tanaman
+            </h2>
+            <span
+              style="
+                font-size: 0.8rem;
+                background: var(--bg-body);
+                padding: 4px 8px;
+                border-radius: 8px;
+                color: var(--text-muted);
+              "
+              >Diagnosa & Penanganan</span
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Status Kesehatan</label>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px"
+            >
+              <select
+                id="cStatus"
+                class="search-input"
+                onchange="app.checkClinicStatus()"
+              >
+                <option value="healthy">Sehat (Sembuh)</option>
+                <option value="sick">Sakit / Karantina</option>
+              </select>
+              <select id="cSeverity" class="search-input" disabled>
+                <option value="">- Tingkat -</option>
+                <option value="Ringan">Ringan</option>
+                <option value="Sedang">Sedang</option>
+                <option value="Berat">Berat</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Masalah (Hama/Penyakit)</label>
+            <input
+              type="text"
+              id="cIssue"
+              class="search-input"
+              list="issueList"
+              placeholder="Ketik atau pilih masalah..."
+              oninput="app.checkClinicSuggestion()"
+            />
+            <datalist id="issueList"> </datalist>
+          </div>
+
+          <div
+            id="cSuggestion"
+            style="
+              display: none;
+              background: var(--primary-light);
+              color: var(--primary-dark);
+              padding: 10px;
+              border-radius: 8px;
+              margin-bottom: 1rem;
+              font-size: 0.9rem;
+              border: 1px solid var(--primary);
+            "
+          >
+            <i class="fa-solid fa-lightbulb"></i> <b>Saran:</b>
+            <span id="cSuggestionText"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Solusi / Tindakan</label>
+            <textarea
+              id="cSolution"
+              class="search-input"
+              rows="3"
+              placeholder="Tindakan yang dilakukan..."
+            ></textarea>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 2rem">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              style="flex: 1"
+              onclick="app.closeModal('clinicModal')"
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              style="flex: 1"
+              onclick="app.saveClinicLog()"
+            >
+              <i class="fa-solid fa-save"></i> Simpan Catatan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="sensorModal">
+      <div class="modal-box">
+        <div style="padding: 2rem">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 1.5rem;
+            "
+          >
+            <h2 style="margin: 0">
+              <i class="fa-solid fa-microchip"></i> Analisis Sensor
+            </h2>
+          </div>
+
+          <div class="method-switch" style="margin-bottom: 15px">
+            <div
+              id="sensorTabSoil"
+              class="method-opt active"
+              onclick="app.switchSensorTab('soil')"
+            >
+              Media Tanam
+            </div>
+            <div
+              id="sensorTabHydro"
+              class="method-opt"
+              onclick="app.switchSensorTab('hydro')"
+            >
+              Hidroponik
+            </div>
+          </div>
+
+          <form id="sensorForm">
+            <!-- Parameter Media Section -->
+            <div style="margin-bottom: 1rem">
+              <h4
+                style="
+                  font-size: 0.85rem;
+                  color: var(--text-muted);
+                  margin-bottom: 0.8rem;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                  font-weight: 700;
+                "
+              >
+                Parameter Media
+              </h4>
+
+              <div id="soilInputs">
+                <div class="sensor-grid">
+                  <div class="sensor-input-group">
+                    <label class="form-label">Kelembaban Tanah</label>
+                    <input
+                      type="number"
+                      id="sMoisture"
+                      class="search-input"
+                      placeholder="0-100"
+                      step="1"
+                    />
+                    <span class="sensor-unit">%</span>
+                  </div>
+                  <div class="sensor-input-group">
+                    <label class="form-label">pH Tanah</label>
+                    <input
+                      type="number"
+                      id="sPh"
+                      class="search-input"
+                      placeholder="0-14"
+                      step="0.1"
+                    />
+                    <span class="sensor-unit">pH</span>
+                  </div>
+                  <div class="sensor-input-group" style="grid-column: span 2">
+                    <label class="form-label">Nutrisi (EC)</label>
+                    <input
+                      type="number"
+                      id="sEcSoil"
+                      class="search-input"
+                      placeholder="0-3000"
+                      step="10"
+                    />
+                    <span class="sensor-unit">μS/cm</span>
+                  </div>
+                </div>
+              </div>
+
+              <div id="hydroInputs" style="display: none">
+                <div class="sensor-grid">
+                  <div class="sensor-input-group">
+                    <label class="form-label">Nutrisi (EC)</label>
+                    <input
+                      type="number"
+                      id="sEc"
+                      class="search-input"
+                      placeholder="0-3000"
+                      step="10"
+                    />
+                    <span class="sensor-unit">μS/cm</span>
+                  </div>
+                  <div class="sensor-input-group">
+                    <label class="form-label">pH Air</label>
+                    <input
+                      type="number"
+                      id="sPhHydro"
+                      class="search-input"
+                      placeholder="0-14"
+                      step="0.1"
+                    />
+                    <span class="sensor-unit">pH</span>
+                  </div>
+                  <div class="sensor-input-group" style="grid-column: span 2">
+                    <label class="form-label">Suhu Air</label>
+                    <input
+                      type="number"
+                      id="sTempWater"
+                      class="search-input"
+                      placeholder="0-50"
+                      step="0.1"
+                    />
+                    <span class="sensor-unit">°C</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parameter Lingkungan Section -->
+            <div
+              style="
+                margin-bottom: 1.5rem;
+                border-top: 1px dashed var(--border);
+                padding-top: 1rem;
+              "
+            >
+              <h4
+                style="
+                  font-size: 0.85rem;
+                  color: var(--text-muted);
+                  margin-bottom: 0.8rem;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                  font-weight: 700;
+                "
+              >
+                Parameter Lingkungan
+              </h4>
+              <div class="sensor-grid">
+                <div class="sensor-input-group">
+                  <label class="form-label">Suhu Udara</label>
+                  <input
+                    type="number"
+                    id="sTemp"
+                    class="search-input"
+                    placeholder="0-50"
+                    step="0.1"
+                  />
+                  <span class="sensor-unit">°C</span>
+                </div>
+                <div class="sensor-input-group">
+                  <label class="form-label">Kelembaban Udara</label>
+                  <input
+                    type="number"
+                    id="sHum"
+                    class="search-input"
+                    placeholder="0-100"
+                    step="1"
+                  />
+                  <span class="sensor-unit">%</span>
+                </div>
+                <div class="sensor-input-group" style="grid-column: span 2">
+                  <label class="form-label">Cahaya (Lux)</label>
+                  <input
+                    type="number"
+                    id="sLux"
+                    class="search-input"
+                    placeholder="0-100k"
+                    step="100"
+                  />
+                  <span class="sensor-unit">Lux</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1rem">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                style="flex: 1"
+                onclick="app.closeModal('sensorModal')"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                style="flex: 2"
+                onclick="app.runAnalysis()"
+              >
+                <i class="fa-solid fa-calculator"></i> Jalankan Analisis
+              </button>
+            </div>
+          </form>
+
+          <div id="analysisResult" class="analysis-result-card">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 1rem;
+              "
+            >
+              <i
+                id="anIcon"
+                class="fa-solid fa-check-circle"
+                style="font-size: 1.5rem"
+              ></i>
+              <h3 id="anTitle" style="margin: 0">Kondisi Optimal</h3>
+            </div>
+
+            <div
+              id="anAdvice"
+              style="margin-bottom: 1rem; font-weight: 600; line-height: 1.4"
+            >
+              Semua parameter terlihat bagus. Lanjutkan perawatan rutin.
+            </div>
+
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.5);
+                padding: 10px;
+                border-radius: 8px;
+              "
+            >
+              <h4 style="font-size: 0.85rem; margin-bottom: 5px; opacity: 0.8">
+                DETAIL PARAMETER:
+              </h4>
+              <div id="anDetails"></div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 1.5rem">
+              <button
+                class="btn btn-secondary"
+                style="flex: 1"
+                onclick="app.closeModal('sensorModal')"
+              >
+                Tutup
+              </button>
+              <button
+                class="btn btn-primary"
+                style="flex: 1"
+                onclick="app.saveAnalysisLog()"
+              >
+                <i class="fa-solid fa-save"></i> Simpan ke Log
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">
+      <i class="fa-solid fa-check-circle" style="color: #4ade80"></i>
+      <span id="toastMsg">Berhasil!</span>
+    </div>
+
+    <script>
+      let PLANT_KNOWLEDGE = {};
+      let OPTIMAL_CONDITIONS = {};
+
+      const CLINIC_KNOWLEDGE = {
+        "Kutu Putih":
+          "Semprot air sabun cair + minyak goreng (1 sdt/liter) atau Neem Oil.",
+        "Daun Kuning":
+          "Cek kelembaban tanah (kurang/lebih air). Beri pupuk Nitrogen jika tanah bagus.",
+        "Busuk Akar":
+          "Kurangi siram. Bongkar media, potong akar busuk, ganti media baru yang porous.",
+        "Bercak Daun":
+          "Jamur/Bakteri. Pangkas daun sakit, hindari siram daun, gunakan fungisida.",
+        Ulat: "Ambil manual. Semprot pestisida nabati (bawang putih/cabai).",
+        Layu: "Jika tanah basah tapi layu = Busuk Akar/Bakteri. Jika kering = Kurang Air.",
+        "Tungau/Mite":
+          "Daun bintik kuning/perak. Semprot air deras atau akarisida.",
+        Jamur:
+          "Lapisan putih/hitam. Kurangi kelembaban, sirkulasi udara diperbaiki, fungisida.",
+      };
+
+      const DEFAULT_IMG =
+        "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=600&q=80";
+      const DAYS_MAP = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+      const app = {
+        user: null,
+        data: [],
+        financeData: [],
+        currentId: null,
+        editingId: null,
+        financeEditingId: null,
+        chart: null,
+        financeChart: null,
+        growthChart: null,
+        harvestChart: null,
+        activePreset: null,
+        currentAnalysis: null,
+        ppmConstant: 0,
+        wikiCache: {},
+        deepLinkHandled: false,
+
+        // --- FITUR CALCULATOR NUTRISI ---
+        initCalculator() {
+          const savedConstant = localStorage.getItem("abmix_constant");
+          if (savedConstant) {
+            this.ppmConstant = parseFloat(savedConstant);
+            this.updateCalibrationUI(true, this.ppmConstant);
+          } else {
+            this.updateCalibrationUI(false, 0);
+          }
+        },
+
+        updateCalibrationUI(isCalibrated, val) {
+          const el = document.getElementById("calibrationStatus");
+          if (!el) return;
+          if (isCalibrated) {
+            el.className = "status-pill";
+            el.style.background = "var(--primary-light)";
+            el.style.color = "var(--primary)";
+            el.style.borderColor = "var(--primary)";
+            el.innerHTML = `<i class="fa-solid fa-check"></i> Konfigurasi Aktif: ${parseFloat(
+              val
+            ).toFixed(1)} PPM (ml/L)`;
+          } else {
+            el.className = "status-pill urgent"; // Memakai style urgent yang sudah ada (merah)
+            el.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Alat belum terkalibrasi`;
+          }
+        },
+
+        runCalibration() {
+          const volAir = parseFloat(
+            document.getElementById("cal_vol_air").value
+          );
+          const dosis = parseFloat(document.getElementById("cal_dosis").value);
+          const ppmAwal = parseFloat(
+            document.getElementById("cal_ppm_awal").value
+          );
+          const ppmAkhir = parseFloat(
+            document.getElementById("cal_ppm_akhir").value
+          );
+
+          if (!volAir || !dosis || isNaN(ppmAwal) || !ppmAkhir) {
+            alert("Semua kolom kalibrasi wajib diisi.");
+            return;
+          }
+
+          if (ppmAkhir <= ppmAwal) {
+            alert("PPM Akhir harus lebih tinggi dari PPM Baku.");
+            return;
+          }
+
+          const kenaikanPPM = ppmAkhir - ppmAwal;
+          const constant = (kenaikanPPM * volAir) / dosis;
+
+          this.ppmConstant = constant;
+          localStorage.setItem("abmix_constant", constant);
+          this.updateCalibrationUI(true, constant);
+
+          this.showToast(
+            `Kalibrasi Berhasil! Konstanta: ${constant.toFixed(1)}`
+          );
+        },
+
+        calculateNutrient() {
+          if (this.ppmConstant <= 0) {
+            alert("Lakukan kalibrasi pada Langkah 01 terlebih dahulu.");
+            return;
+          }
+
+          const volTandon = parseFloat(
+            document.getElementById("main_vol_tandon").value
+          );
+          const ppmAwal = parseFloat(
+            document.getElementById("main_ppm_awal").value
+          );
+          const ppmTarget = parseFloat(
+            document.getElementById("main_ppm_target").value
+          );
+
+          if (!volTandon || isNaN(ppmAwal) || !ppmTarget) {
+            alert("Isi volume tandon dan target PPM Anda.");
+            return;
+          }
+
+          if (ppmTarget <= ppmAwal) {
+            alert("PPM saat ini sudah melebihi atau sama dengan target.");
+            document.getElementById("calcResultBox").style.display = "none";
+            return;
+          }
+
+          const ppmNeeded = ppmTarget - ppmAwal;
+          const mlNeeded = (ppmNeeded / this.ppmConstant) * volTandon;
+
+          document.getElementById("calcResultVal").innerText =
+            mlNeeded.toLocaleString("id-ID", { maximumFractionDigits: 1 }) +
+            " ml";
+          document.getElementById(
+            "calcResultDetail"
+          ).innerText = `Untuk menaikkan ${ppmNeeded} PPM pada ${volTandon} Liter air.`;
+          document.getElementById("calcResultBox").style.display = "block";
+        },
+
+        resetCalibration() {
+          if (
+            confirm(
+              "Hapus data kalibrasi? Anda harus kalibrasi ulang jika ganti merek nutrisi."
+            )
+          ) {
+            localStorage.removeItem("abmix_constant");
+            this.ppmConstant = 0;
+            document.getElementById("calcResultBox").style.display = "none";
+            this.updateCalibrationUI(false, 0);
+
+            // Reset inputs
+            [
+              "cal_vol_air",
+              "cal_dosis",
+              "cal_ppm_awal",
+              "cal_ppm_akhir",
+            ].forEach((id) => (document.getElementById(id).value = ""));
+            this.showToast("Kalibrasi dihapus.");
+          }
+        },
+
+        loginGoogle() {
+          if (!window.authOps) {
+            alert(
+              "Sistem Login belum siap. Pastikan Konfigurasi Firebase sudah diisi di bagian bawah kode (baris ~2756)."
+            );
+            return;
+          }
+          const provider = new window.authOps.GoogleAuthProvider();
+          window.authOps
+            .signInWithPopup(window.auth, provider)
+            .then((result) => {
+              // Login berhasil, onAuthStateChanged akan menangani sisanya
+              console.log("Login Berhasil:", result.user.email);
+            })
+            .catch((error) => {
+              alert("Gagal Login: " + error.message);
+            });
+        },
+
+        logout() {
+          if (confirm("Keluar dari akun?")) {
+            window.authOps.signOut(window.auth).then(() => {
+              location.reload(); // Refresh halaman
+            });
+          }
+        },
+
+        // --- FEATURE: METHOD SWITCH (SOIL vs HYDRO) ---
+        switchSensorTab(type) {
+          if (type === "soil") {
+            document.getElementById("soilInputs").style.display = "block";
+            document.getElementById("hydroInputs").style.display = "none";
+            document.getElementById("sensorTabSoil").className =
+              "method-opt active";
+            document.getElementById("sensorTabHydro").className = "method-opt";
+          } else {
+            document.getElementById("soilInputs").style.display = "none";
+            document.getElementById("hydroInputs").style.display = "block";
+            document.getElementById("sensorTabSoil").className = "method-opt";
+            document.getElementById("sensorTabHydro").className =
+              "method-opt active";
+          }
+        },
+
+        setMethod(type) {
+          document.getElementById("pMethod").value = type;
+          const lblWater = document.getElementById("lblWaterAction");
+          const hydroSec = document.getElementById("hydroFlushSection");
+          const fertSec = document.getElementById("commonFertSection");
+
+          // UI Toggles
+          if (type === "hydro") {
+            document.getElementById("optSoil").className = "method-opt";
+            document.getElementById("optHydro").className =
+              "method-opt active-hydro";
+            lblWater.innerHTML =
+              '<i class="fa-solid fa-faucet-drip"></i> Cek Air & Nutrisi (Top-up)';
+            hydroSec.style.display = "block";
+            if (fertSec) fertSec.style.display = "none"; // Hide fertilizer section in hydro (merged into flush/nutrients)
+          } else {
+            document.getElementById("optSoil").className = "method-opt active";
+            document.getElementById("optHydro").className = "method-opt";
+            lblWater.innerHTML =
+              '<i class="fa-solid fa-droplet"></i> Jadwal Siram Mingguan';
+            hydroSec.style.display = "none";
+            if (fertSec) fertSec.style.display = "block";
+          }
+        },
+
+        async waterAllDue() {
+          const today = new Date().setHours(0, 0, 0, 0);
+          let plantsToUpdate = [];
+
+          this.data.forEach((p) => {
+            const nextWater = this.getNextDate(p.waterSchedule, p.lastWater);
+            if (nextWater.getTime() <= today) {
+              p.lastWater = new Date().toISOString();
+              p.logs.push({
+                date: new Date().toISOString(),
+                type: "siram",
+                action: "Disiram (Otomatis)",
+              });
+              plantsToUpdate.push(p);
+            }
+          });
+
+          if (plantsToUpdate.length > 0) {
+            await this.batchUpdatePlants(plantsToUpdate);
+            this.updateUI();
+            this.showToast(
+              `${plantsToUpdate.length} tanaman berhasil disiram!`
+            );
+          }
+        },
+
+        openSensorModal() {
+          document.getElementById("sensorForm").reset();
+          document.getElementById("analysisResult").style.display = "none";
+          this.currentAnalysis = null;
+
+          const p = this.data.find((x) => x.id === this.currentId);
+          if (p && p.method === "hydro") {
+            this.switchSensorTab("hydro");
+          } else {
+            this.switchSensorTab("soil");
+          }
+
+          this.openModal("sensorModal");
+        },
+
+        simulateSensor() {
+          // Simulation removed as per user request
+        },
+
+        runAnalysis() {
+          const p = this.data.find((x) => x.id === this.currentId);
+          const nameKey = this.getPlantKey(p.name);
+          const key =
+            nameKey && OPTIMAL_CONDITIONS[nameKey]
+              ? nameKey
+              : p.type || "Default";
+          const range =
+            OPTIMAL_CONDITIONS[key] || OPTIMAL_CONDITIONS["Default"];
+          const isHydro = document
+            .getElementById("sensorTabHydro")
+            .classList.contains("active");
+
+          // Base inputs (common)
+          const inputs = {
+            temp: parseFloat(document.getElementById("sTemp").value),
+            lux: parseFloat(document.getElementById("sLux").value),
+            hum: parseFloat(document.getElementById("sHum").value),
+          };
+
+          // Method specific inputs
+          if (isHydro) {
+            inputs.ec = parseFloat(document.getElementById("sEc").value);
+            inputs.ph = parseFloat(document.getElementById("sPhHydro").value);
+            inputs.tempWater = parseFloat(
+              document.getElementById("sTempWater").value
+            );
+          } else {
+            inputs.moisture = parseFloat(
+              document.getElementById("sMoisture").value
+            );
+            inputs.ph = parseFloat(document.getElementById("sPh").value);
+            inputs.ec = parseFloat(document.getElementById("sEcSoil").value);
+          }
+
+          // Validation
+          if (isNaN(inputs.temp) || isNaN(inputs.lux) || isNaN(inputs.hum)) {
+            alert("Data lingkungan tidak lengkap");
+            return;
+          }
+          if (isHydro) {
+            if (
+              isNaN(inputs.ec) ||
+              isNaN(inputs.ph) ||
+              isNaN(inputs.tempWater)
+            ) {
+              alert("Data sensor hidroponik tidak lengkap");
+              return;
+            }
+          } else {
+            if (
+              isNaN(inputs.moisture) ||
+              isNaN(inputs.ph) ||
+              isNaN(inputs.ec)
+            ) {
+              alert("Data sensor tanah tidak lengkap");
+              return;
+            }
+          }
+
+          let issues = [];
+          let score = 0;
+          let htmlDetails = "";
+
+          const check = (val, min, max, name, unit, lowMsg, highMsg) => {
+            let status = "OK";
+            let colorClass = "status-ok";
+            if (val < min) {
+              status = "LOW";
+              colorClass = "status-bad";
+              issues.push(lowMsg);
+            } else if (val > max) {
+              status = "HIGH";
+              colorClass = "status-bad";
+              issues.push(highMsg);
+            } else {
+              score++;
+            }
+            htmlDetails += `
+                        <div class="health-parameter-row">
+                            <span>${name} (${val} ${unit})</span>
+                            <span class="param-status ${colorClass}">${status}</span>
+                        </div>`;
+          };
+
+          // Apply checks based on method
+          if (isHydro) {
+            check(
+              inputs.ec,
+              range.ec[0],
+              range.ec[1],
+              "Nutrisi (EC)",
+              "μS",
+              "Kurang nutrisi: <b>Tambah dosis pupuk</b>.",
+              "Overdosis pupuk: <b>Flushing dengan air murni</b>."
+            );
+            check(
+              inputs.ph,
+              range.ph[0],
+              range.ph[1],
+              "pH Air",
+              "",
+              "pH Asam: <b>Tambahkan pH Up/Basa</b>.",
+              "pH Basa: <b>Tambahkan pH Down/Asam</b>."
+            );
+            check(
+              inputs.tempWater,
+              18,
+              28,
+              "Suhu Air",
+              "°C",
+              "Air terlalu dingin: <b>Gunakan heater/pemanas</b>.",
+              "Air terlalu panas: <b>Tambahkan es batu/chiller</b>."
+            );
+          } else {
+            check(
+              inputs.moisture,
+              range.moisture[0],
+              range.moisture[1],
+              "Kelembaban",
+              "%",
+              "Tanah terlalu kering: <b>Segera siram</b>.",
+              "Tanah terlalu basah: <b>Hentikan penyiraman</b>."
+            );
+            check(
+              inputs.ph,
+              range.ph[0],
+              range.ph[1],
+              "pH Tanah",
+              "",
+              "pH Asam: <b>Tambahkan Dolomit/Kapur</b>.",
+              "pH Basa: <b>Tambahkan Sulfur/Belerang</b>."
+            );
+            check(
+              inputs.ec,
+              range.ec[0],
+              range.ec[1],
+              "Nutrisi (EC)",
+              "μS",
+              "Tanah kurang subur: <b>Beri pupuk susulan</b>.",
+              "Tanah terlalu asin: <b>Flushing/siram air banyak</b>."
+            );
+          }
+
+          check(
+            inputs.temp,
+            range.temp[0],
+            range.temp[1],
+            "Suhu Udara",
+            "°C",
+            "Suhu terlalu dingin: <b>Pasang lampu pemanas/greenhouse</b>.",
+            "Suhu panas: <b>Beri naungan/sprinkler</b>."
+          );
+          check(
+            inputs.lux,
+            range.lux[0],
+            range.lux[1],
+            "Cahaya",
+            "Lux",
+            "Kurang cahaya: <b>Pindah ke tempat terang/Grow light</b>.",
+            "Terbakar matahari: <b>Beri naungan (paranet)</b>."
+          );
+          check(
+            inputs.hum,
+            range.hum[0],
+            range.hum[1],
+            "Udara",
+            "%",
+            "Udara kering: <b>Semprot daun (misting)</b>.",
+            "Udara lembab: <b>Perbaiki sirkulasi udara/kipas</b>."
+          );
+
+          const card = document.getElementById("analysisResult");
+          const title = document.getElementById("anTitle");
+          const advice = document.getElementById("anAdvice");
+          const icon = document.getElementById("anIcon");
+
+          card.classList.remove(
+            "analysis-optimal",
+            "analysis-warning",
+            "analysis-critical"
+          );
+
+          let statusText = "",
+            finalAction = "";
+          const totalParams = 6;
+
+          if (score === totalParams) {
+            card.classList.add("analysis-optimal");
+            title.innerText = "Kondisi Tanaman Optimal";
+            advice.innerHTML =
+              "Lingkungan tumbuh sempurna. Pertahankan rutinitas saat ini.";
+            icon.className = "fa-solid fa-check-circle";
+            statusText = "Optimal";
+            finalAction = "Cek Sensor: Sehat";
+          } else if (score >= totalParams - 2) {
+            card.classList.add("analysis-warning");
+            title.innerText = "Cek Sensor: Perlu Tindakan";
+            advice.innerHTML = `<div style="margin-bottom:5px;">Lakukan tindakan berikut:</div><ul style="padding-left:20px; margin:0;">${issues
+              .map((i) => `<li style="margin-bottom:4px;">${i}</li>`)
+              .join("")}</ul>`;
+            icon.className = "fa-solid fa-triangle-exclamation";
+            statusText = "Warning";
+            finalAction = "Cek Sensor: Perlu Tindakan";
+          } else {
+            card.classList.add("analysis-critical");
+            title.innerText = "Cek Sensor: Perlu Tindakan Segera";
+            advice.innerHTML = `<div style="margin-bottom:5px; font-weight:bold; color:var(--danger);">Tindakan Kritis Diperlukan:</div><ul style="padding-left:20px; margin:0;">${issues
+              .map((i) => `<li style="margin-bottom:4px;">${i}</li>`)
+              .join("")}</ul>`;
+            icon.className = "fa-solid fa-skull-crossbones";
+            statusText = "Critical";
+            finalAction = "Cek Sensor: KRITIS";
+          }
+
+          document.getElementById("anDetails").innerHTML = htmlDetails;
+          card.style.display = "block";
+
+          this.currentAnalysis = {
+            status: statusText,
+            actionTitle: finalAction,
+            adviceRaw: issues.join(", ") || "Semua parameter optimal",
+            inputs: inputs,
+            issues: issues,
+          };
+        },
+
+        saveAnalysisLog() {
+          if (!this.currentAnalysis) return;
+          const idx = this.data.findIndex((p) => p.id === this.currentId);
+
+          const logData = {
+            date: new Date().toISOString(),
+            type: "clinic",
+            action: this.currentAnalysis.actionTitle,
+            desc: `Diagnosa: ${this.currentAnalysis.status}.`,
+            sensorData: this.currentAnalysis.inputs,
+            status: this.currentAnalysis.status, // "Optimal", "Warning", "Critical"
+            issues: this.currentAnalysis.issues, // Array of instruction strings
+          };
+
+          this.data[idx].logs.push(logData);
+
+          if (this.currentAnalysis.status === "Critical") {
+            this.data[idx].healthStatus = "sick";
+            this.showToast("Status tanaman diubah menjadi SAKIT");
+          }
+
+          this.savePlant(this.data[idx]);
+          this.closeModal("sensorModal");
+          this.renderTimeline(this.data[idx]);
+          this.openDetail(this.currentId);
+          this.showToast("Data sensor disimpan!");
+        },
+
+        showInstruction(encodedIssues) {
+          const issues = JSON.parse(decodeURIComponent(encodedIssues));
+          const list = document.getElementById("instructionList");
+          list.innerHTML = issues
+            .map(
+              (i) =>
+                `<li style="margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid #e2e8f0;">${i}</li>`
+            )
+            .join("");
+          this.openModal("instructionModal");
+        },
+
+        async loadStaticData() {
+          try {
+            const [pkRes, ocRes] = await Promise.all([
+              fetch("plant_knowledge.json"),
+              fetch("optimal_conditions.json"),
+            ]);
+
+            if (!pkRes.ok) throw new Error("Gagal memuat plant_knowledge.json");
+            if (!ocRes.ok)
+              throw new Error("Gagal memuat optimal_conditions.json");
+
+            PLANT_KNOWLEDGE = await pkRes.json();
+
+            // Fix: Flatten nested structure of optimal_conditions.json
+            const rawOC = await ocRes.json();
+            const rootOC = rawOC.optimal_conditions || rawOC;
+            const flatOC = {};
+            for (const key in rootOC) {
+              const val = rootOC[key];
+              if (val.moisture || val.ph) {
+                flatOC[key] = val;
+              } else {
+                Object.assign(flatOC, val);
+              }
+            }
+            OPTIMAL_CONDITIONS = flatOC;
+            console.log("Static data loaded");
+          } catch (e) {
+            console.error("Failed to load static data:", e);
+            this.showToast(
+              "Gagal memuat data referensi tanaman. Pastikan file JSON tersedia."
+            );
+          }
+        },
+
+        async init() {
+          await this.loadStaticData();
+          // Setup dasar UI
+          const theme = localStorage.getItem("sg_theme") || "light";
+          document.documentElement.setAttribute("data-theme", theme);
+          this.startClock();
+          this.fetchWeather();
+
+          // CEK STATUS LOGIN
+          window.authOps.onAuthStateChanged(window.auth, async (user) => {
+            if (user) {
+              // --- JIKA USER SUDAH LOGIN ---
+              this.user = user;
+
+              // 1. Sembunyikan layar login
+              document.getElementById("loginScreen").style.display = "none";
+
+              // 2. Tampilkan info user
+              const uInfo = document.getElementById("userInfo");
+              if (uInfo) uInfo.style.display = "inline-flex";
+
+              const uName = document.getElementById("userName");
+              if (uName) uName.innerText = user.displayName;
+
+              const uPhoto = document.getElementById("userPhoto");
+              if (uPhoto) uPhoto.src = user.photoURL;
+
+              // 3. AMBIL DATA DARI FOLDER KHUSUS USER (users/{uid}/plants)
+              await this.loadUserData();
+            } else {
+              // --- JIKA BELUM LOGIN ---
+              document.getElementById("loginScreen").style.display = "flex";
+              document.getElementById("userInfo").style.display = "none";
+            }
+          });
+
+          // Timer cek notifikasi
+          setInterval(() => {
+            this.checkReminders();
+          }, 3600000);
+        },
+
+        // Fungsi baru untuk mengambil data spesifik user
+        async loadUserData() {
+          if (!this.user) return;
+          const uid = this.user.uid; // ID Unik Pengguna
+
+          // Ambil Data Tanaman: path-nya sekarang 'users' -> uid -> 'plants'
+          const plantsRef = window.fbOps.collection(
+            window.db,
+            "users",
+            uid,
+            "plants"
+          );
+          const pSnap = await window.fbOps.getDocs(plantsRef);
+          this.data = pSnap.docs.map((doc) => doc.data());
+
+          // Ambil Data Keuangan: path-nya sekarang 'users' -> uid -> 'finance'
+          const finRef = window.fbOps.collection(
+            window.db,
+            "users",
+            uid,
+            "finance"
+          );
+          const fSnap = await window.fbOps.getDocs(finRef);
+          this.financeData = fSnap.docs.map((doc) => doc.data());
+
+          // Update UI setelah data diambil
+          this.updateUI();
+          this.updateStorageInfo();
+          this.checkReminders();
+          this.handleDeepLink();
+        },
+
+        // OPTIMIZED SAVE: Only save one plant
+        async savePlant(plant) {
+          if (!this.user) return;
+          const uid = this.user.uid;
+          try {
+            const docRef = window.fbOps.doc(
+              window.db,
+              "users",
+              uid,
+              "plants",
+              plant.id.toString()
+            );
+            await window.fbOps.setDoc(docRef, plant);
+          } catch (e) {
+            console.error("Error saving plant:", e);
+          }
+          this.updateStorageInfo();
+        },
+
+        // OPTIMIZED SAVE: Only save one finance record
+        async saveFinanceItem(item) {
+          if (!this.user) return;
+          const uid = this.user.uid;
+          try {
+            const docRef = window.fbOps.doc(
+              window.db,
+              "users",
+              uid,
+              "finance",
+              item.id.toString()
+            );
+            await window.fbOps.setDoc(docRef, item);
+          } catch (e) {
+            console.error("Error saving finance:", e);
+          }
+        },
+
+        // BATCH UPDATE: For waterAllDue and RainDelay
+        async batchUpdatePlants(plantsToUpdate) {
+          if (!this.user || plantsToUpdate.length === 0) return;
+          const uid = this.user.uid;
+          const batch = window.fbOps.writeBatch(window.db);
+
+          plantsToUpdate.forEach((p) => {
+            const docRef = window.fbOps.doc(
+              window.db,
+              "users",
+              uid,
+              "plants",
+              p.id.toString()
+            );
+            batch.set(docRef, p);
+          });
+
+          try {
+            await batch.commit();
+            console.log("Batch update success");
+          } catch (e) {
+            console.error("Batch update failed:", e);
+          }
+          this.updateStorageInfo();
+        },
+
+        async batchUpdateFinance(itemsToUpdate) {
+          if (!this.user || itemsToUpdate.length === 0) return;
+          const uid = this.user.uid;
+
+          const chunkSize = 400;
+          for (let i = 0; i < itemsToUpdate.length; i += chunkSize) {
+            const chunk = itemsToUpdate.slice(i, i + chunkSize);
+            const batch = window.fbOps.writeBatch(window.db);
+
+            chunk.forEach((item) => {
+              const docRef = window.fbOps.doc(
+                window.db,
+                "users",
+                uid,
+                "finance",
+                item.id.toString()
+              );
+              batch.set(docRef, item);
+            });
+
+            try {
+              await batch.commit();
+              console.log(
+                `Batch finance update success (chunk ${i / chunkSize + 1})`
+              );
+            } catch (e) {
+              console.error("Batch finance update failed:", e);
+            }
+          }
+        },
+
+        async save() {
+          // DEPRECATED: Use savePlant or batchUpdatePlants instead for better performance.
+          // Kept for backward compatibility if needed, but should be avoided.
+          if (!this.user) return;
+          const uid = this.user.uid;
+
+          // Loop dan simpan ke: users/{uid}/plants/{plantId}
+          this.data.forEach(async (plant) => {
+            try {
+              // Perhatikan path-nya: users -> uid -> plants -> id
+              const docRef = window.fbOps.doc(
+                window.db,
+                "users",
+                uid,
+                "plants",
+                plant.id.toString()
+              );
+              await window.fbOps.setDoc(docRef, plant);
+            } catch (e) {
+              console.error(e);
+            }
+          });
+
+          this.updateUI();
+          this.updateStorageInfo();
+        },
+
+        async saveFinance() {
+          // DEPRECATED: Use saveFinanceItem or batchUpdateFinance
+          if (!this.user) return;
+          await this.batchUpdateFinance(this.financeData);
+          this.updateUI();
+        },
+
+        startClock() {
+          const updateTime = () => {
+            const now = new Date();
+            const clockEl = document.getElementById("clockDisplay");
+            if (clockEl)
+              clockEl.innerText = now.toLocaleTimeString("id-ID", {
+                hour12: false,
+              });
+
+            const hours = now.getHours();
+            let greet =
+              hours < 11
+                ? "Selamat Pagi"
+                : hours < 15
+                ? "Selamat Siang"
+                : hours < 18
+                ? "Selamat Sore"
+                : "Selamat Malam";
+            const greetEl = document.getElementById("greeting");
+            if (greetEl) greetEl.innerText = `${greet},`;
+
+            const dateEl = document.getElementById("dateDisplay");
+            if (dateEl)
+              dateEl.innerText = now.toLocaleDateString("id-ID", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              });
+          };
+          updateTime();
+          setInterval(updateTime, 1000);
+        },
+
+        updateStorageInfo() {
+          const str =
+            JSON.stringify(this.data) + JSON.stringify(this.financeData);
+          document.getElementById("storageUsed").innerText = (
+            str.length / 1024
+          ).toFixed(2);
+        },
+
+        updateUI() {
+          this.renderDashboard();
+          this.renderGrid();
+          this.renderFinance();
+          this.checkHealthAlerts();
+          this.handleDeepLink();
+        },
+
+        handleDeepLink() {
+          if (this.deepLinkHandled) return;
+          const params = new URLSearchParams(window.location.search);
+          const pid = params.get("plantId");
+          if (!pid) return;
+          const target =
+            this.data.find((p) => p.id.toString() === pid) ||
+            this.data.find((p) => p.id === parseInt(pid));
+          if (target) {
+            this.openDetail(target.id);
+            this.deepLinkHandled = true;
+          }
+        },
+
+        checkHealthAlerts() {
+          const sickPlants = this.data.filter((p) => p.healthStatus === "sick");
+          const alertContainer = document.getElementById("sickAlertContainer");
+          if (!alertContainer) return;
+
+          if (sickPlants.length > 0) {
+            alertContainer.innerHTML = `
+                        <div class="alert-banner">
+                            <div>
+                                <h3 style="margin-bottom:2px;"><i class="fa-solid fa-triangle-exclamation"></i> Perhatian Diperlukan</h3>
+                                <p style="font-size:0.9rem;">Ada <b>${sickPlants.length}</b> tanaman yang terdeteksi sakit.</p>
+                            </div>
+                            <button class="btn btn-sm" style="background:white; color:var(--danger); border:none;" onclick="app.filterSickPlants()">Lihat</button>
+                        </div>
+                    `;
+          } else {
+            alertContainer.innerHTML = "";
+          }
+        },
+
+        filterSickPlants() {
+          this.switchTab("garden");
+          document.getElementById("plantSearch").value = "";
+          document.getElementById("plantGrid").scrollIntoView();
+        },
+
+        getNextDate(scheduleArr, lastDateStr) {
+          if (!scheduleArr || scheduleArr.length === 0) return new Date();
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const currentDay = today.getDay();
+          const schedule = scheduleArr.sort((a, b) => a - b);
+
+          if (schedule.includes(currentDay)) {
+            const lastAction = new Date(lastDateStr).setHours(0, 0, 0, 0);
+            if (lastAction < today.getTime()) {
+              return today;
+            }
+          }
+          let nextDay = schedule.find((d) => d > currentDay);
+          if (nextDay === undefined) {
+            nextDay = schedule[0];
+          }
+          let daysUntil = (nextDay + 7 - currentDay) % 7;
+          if (daysUntil === 0) daysUntil = 7;
+          const nextDate = new Date(today);
+          nextDate.setDate(today.getDate() + daysUntil);
+          return nextDate;
+        },
+
+        getNextFlushDate(frequency, lastDateStr, plantedDateStr) {
+          if (!frequency || frequency < 1) return null;
+          let baseDate;
+          if (lastDateStr) {
+            baseDate = new Date(lastDateStr);
+          } else if (plantedDateStr) {
+            baseDate = new Date(plantedDateStr);
+          } else {
+            baseDate = new Date();
+          }
+          baseDate.setHours(0, 0, 0, 0);
+          const nextDate = new Date(baseDate);
+          nextDate.setDate(baseDate.getDate() + parseInt(frequency));
+          return nextDate;
+        },
+
+        renderDashboard() {
+          document.getElementById("totalCount").innerText = this.data.length;
+          const today = new Date().setHours(0, 0, 0, 0);
+          let actionNeededCount = 0;
+          let routineActions = 0;
+          let interventionActions = 0;
+
+          this.data.forEach((p) => {
+            let isDue = false;
+            const nextWater = this.getNextDate(p.waterSchedule, p.lastWater);
+            if (nextWater.getTime() <= today) isDue = true;
+
+            // Flush schedule is displayed in Grid but excluded from Bulk Action count
+            // to prevent accidental auto-update of maintenance tasks.
+
+            if (isDue) actionNeededCount++;
+
+            p.logs.forEach((l) => {
+              if (
+                l.type === "siram" ||
+                l.type === "pupuk" ||
+                l.type === "topup" ||
+                l.type === "kuras"
+              )
+                routineActions++;
+              if (l.type === "clinic" && l.action.includes("Sakit"))
+                interventionActions++;
+            });
+          });
+
+          document.getElementById("waterCount").innerText = actionNeededCount;
+
+          const bulkBtn = document.getElementById("bulkWaterBtn");
+          if (actionNeededCount > 0) {
+            bulkBtn.style.display = "inline-flex";
+            bulkBtn.innerHTML = `<i class="fa-solid fa-check-double"></i> Cek ${actionNeededCount} Tanaman`;
+          } else {
+            bulkBtn.style.display = "none";
+          }
+
+          const totalActs = routineActions + interventionActions;
+          const score =
+            totalActs === 0
+              ? 100
+              : Math.round((routineActions / totalActs) * 100);
+          document.getElementById("careScore").innerText = `${score}%`;
+
+          const typeCounts = {};
+          this.data.forEach(
+            (p) => (typeCounts[p.type] = (typeCounts[p.type] || 0) + 1)
+          );
+
+          if (this.chart) this.chart.destroy();
+          this.chart = new Chart(
+            document.getElementById("plantChart").getContext("2d"),
+            {
+              type: "doughnut",
+              data: {
+                labels: Object.keys(typeCounts),
+                datasets: [
+                  {
+                    data: Object.values(typeCounts),
+                    backgroundColor: [
+                      "#10b981",
+                      "#f59e0b",
+                      "#3b82f6",
+                      "#ec4899",
+                      "#8b5cf6",
+                    ],
+                    borderWidth: 0,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "70%",
+                plugins: { legend: { position: "right" } },
+              },
+            }
+          );
+
+          const income = this.financeData
+            .filter((f) => f.type === "in")
+            .reduce((sum, f) => sum + f.amount, 0);
+          const expense = this.financeData
+            .filter((f) => f.type === "out")
+            .reduce((sum, f) => sum + f.amount, 0);
+          document.getElementById("dashBalance").innerText = `Rp ${(
+            income - expense
+          ).toLocaleString()}`;
+
+          if (this.financeChart) this.financeChart.destroy();
+          this.financeChart = new Chart(
+            document.getElementById("financeChart").getContext("2d"),
+            {
+              type: "bar",
+              data: {
+                labels: ["Pemasukan", "Pengeluaran"],
+                datasets: [
+                  {
+                    label: "Rupiah",
+                    data: [income, expense],
+                    backgroundColor: ["#10b981", "#f43f5e"],
+                    borderRadius: 8,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } },
+              },
+            }
+          );
+
+          const months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "Mei",
+            "Jun",
+            "Jul",
+            "Agu",
+            "Sep",
+            "Okt",
+            "Nov",
+            "Des",
+          ];
+          const activityData = new Array(12).fill(0);
+          this.data.forEach((p) => {
+            p.logs.forEach((l) => {
+              const m = new Date(l.date).getMonth();
+              activityData[m]++;
+            });
+          });
+
+          if (this.growthChart) this.growthChart.destroy();
+          this.growthChart = new Chart(
+            document.getElementById("growthChart").getContext("2d"),
+            {
+              type: "line",
+              data: {
+                labels: months,
+                datasets: [
+                  {
+                    label: "Frekuensi Perawatan",
+                    data: activityData,
+                    borderColor: "#3b82f6",
+                    backgroundColor: "rgba(59, 130, 246, 0.1)",
+                    fill: true,
+                    tension: 0.4,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } },
+              },
+            }
+          );
+        },
+
+        renderFinance() {
+          const list = document.getElementById("transactionList");
+          list.innerHTML = "";
+          let inc = 0,
+            exp = 0;
+
+          const sorted = [...this.financeData].sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+
+          if (sorted.length === 0) {
+            list.innerHTML = `<div style="text-align:center; padding:2rem; color:var(--text-muted);">Belum ada transaksi.</div>`;
+          } else {
+            sorted.forEach((t) => {
+              if (t.type === "in") inc += t.amount;
+              else exp += t.amount;
+              const color =
+                t.type === "in" ? "var(--money-in)" : "var(--money-out)";
+              const sign = t.type === "in" ? "+" : "-";
+              const icon =
+                t.type === "in" ? "fa-arrow-trend-up" : "fa-arrow-trend-down";
+
+              list.innerHTML += `
+                            <div class="finance-row">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:40px; height:40px; border-radius:50%; background:${
+                                      t.type === "in" ? "#ecfdf5" : "#fff1f2"
+                                    }; display:grid; place-items:center; color:${color}; font-size:1.1rem;">
+                                        <i class="fa-solid ${icon}"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:600; color:var(--text-main);">${
+                                          t.desc
+                                        }</div>
+                                        <div style="font-size:0.8rem; color:var(--text-muted);">${new Date(
+                                          t.date
+                                        ).toLocaleDateString("id-ID", {
+                                          day: "numeric",
+                                          month: "short",
+                                          year: "numeric",
+                                        })}</div>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-weight:700; color:${color}; font-size:1.05rem;">
+                                        ${sign} Rp ${t.amount.toLocaleString()}
+                                    </div>
+                                    <div class="finance-actions" style="justify-content:flex-end; margin-top:4px;">
+                                        <button class="btn btn-sm btn-secondary" style="padding:4px 8px;" onclick="app.editFinanceLog(${
+                                          t.id
+                                        })"><i class="fa-solid fa-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger" style="padding:4px 8px; background:#fee2e2; color:#ef4444; border:none;" onclick="app.deleteFinanceLog(${
+                                          t.id
+                                        })"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+            });
+          }
+
+          document.getElementById(
+            "totalIncome"
+          ).innerText = `Rp ${inc.toLocaleString()}`;
+          document.getElementById(
+            "totalExpense"
+          ).innerText = `Rp ${exp.toLocaleString()}`;
+          const net = inc - exp;
+          const elNet = document.getElementById("netBalance");
+          elNet.innerText = `Rp ${net.toLocaleString()}`;
+          elNet.style.color = net >= 0 ? "var(--money-in)" : "var(--money-out)";
+
+          const harvestData = {};
+          this.data.forEach((p) => {
+            let totalYield = 0;
+            p.logs.forEach((l) => {
+              if (l.type === "harvest" && l.amount) totalYield += l.amount;
+            });
+            if (totalYield > 0) harvestData[p.name] = totalYield;
+          });
+
+          if (this.harvestChart) this.harvestChart.destroy();
+          const harvestLabels = Object.keys(harvestData);
+          const harvestValues = Object.values(harvestData);
+
+          if (harvestLabels.length > 0) {
+            this.harvestChart = new Chart(
+              document.getElementById("harvestChart").getContext("2d"),
+              {
+                type: "bar",
+                data: {
+                  labels: harvestLabels,
+                  datasets: [
+                    {
+                      label: "Hasil Panen (Kg)",
+                      data: harvestValues,
+                      backgroundColor: "#f97316",
+                      borderRadius: 6,
+                    },
+                  ],
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  indexAxis: "y",
+                  scales: { x: { beginAtZero: true } },
+                },
+              }
+            );
+          } else {
+            this.harvestChart = new Chart(
+              document.getElementById("harvestChart").getContext("2d"),
+              {
+                type: "bar",
+                data: {
+                  labels: ["Belum Ada Data"],
+                  datasets: [{ data: [0], label: "Kosong" }],
+                },
+                options: { responsive: true, maintainAspectRatio: false },
+              }
+            );
+          }
+        },
+
+        editFinanceLog(id) {
+          const t = this.financeData.find((x) => x.id === id);
+          if (!t) return;
+          this.financeEditingId = id;
+          document.getElementById("fType").value = t.type;
+          document.getElementById("fAmount").value = t.amount;
+          document.getElementById("fDesc").value = t.desc;
+          document.getElementById("fDate").value = t.date;
+          document.querySelector("#financeModal h2").innerText =
+            "Edit Transaksi";
+          this.openModal("financeModal");
+        },
+
+        async deleteFinanceLog(id) {
+          if (confirm("Hapus permanen?")) {
+            if (!this.user) return;
+            const idToDelete = id;
+            const uid = this.user.uid;
+
+            // Hapus dari memory lokal
+            this.financeData = this.financeData.filter(
+              (x) => x.id !== idToDelete
+            );
+
+            // Hapus dari Firebase
+            try {
+              const docRef = window.fbOps.doc(
+                window.db,
+                "users",
+                uid,
+                "finance",
+                idToDelete.toString()
+              );
+              await window.fbOps.deleteDoc(docRef);
+              this.showToast("Data dihapus dari Cloud");
+            } catch (e) {
+              console.error("Gagal hapus di cloud", e);
+            }
+
+            this.updateUI();
+          }
+        },
+
+        openFinanceModal() {
+          document.getElementById("financeForm").reset();
+          document.getElementById("fDate").valueAsDate = new Date();
+          this.financeEditingId = null;
+          document.querySelector("#financeModal h2").innerText =
+            "Catat Transaksi";
+          this.openModal("financeModal");
+        },
+
+        toggleFinanceCat() {},
+
+        renderGrid() {
+          const container = document.getElementById("plantGrid");
+          const filter = document.getElementById("plantSearch").value || "";
+          const sortMode =
+            document.getElementById("sortSelect").value || "urgency";
+          container.innerHTML = "";
+
+          const getNextAction = (p) => {
+            const nextWater = this.getNextDate(p.waterSchedule, p.lastWater);
+            let nextAction = nextWater;
+            let type = "water";
+
+            if (p.method === "hydro" && p.flushFrequency) {
+              const nextFlush = this.getNextFlushDate(
+                p.flushFrequency,
+                p.lastFlush,
+                p.date
+              );
+              // Prioritize flush if it's due sooner OR on the same day (<=)
+              if (nextFlush && nextFlush <= nextWater) {
+                nextAction = nextFlush;
+                type = "flush";
+              }
+            }
+            return { date: nextAction, type };
+          };
+
+          let filtered = this.data.filter((p) =>
+            p.name.toLowerCase().includes(filter.toLowerCase())
+          );
+
+          filtered.sort((a, b) => {
+            const nextA = getNextAction(a).date.getTime();
+            const nextB = getNextAction(b).date.getTime();
+            if (sortMode === "urgency") return nextA - nextB;
+            if (sortMode === "az") return a.name.localeCompare(b.name);
+            if (sortMode === "newest") return b.id - a.id;
+            return 0;
+          });
+
+          if (filtered.length === 0) {
+            container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem; opacity:0.5;"><p>Data tidak ditemukan.</p></div>`;
+            return;
+          }
+
+          filtered.forEach((p) => {
+            const today = new Date().setHours(0, 0, 0, 0);
+            const actionInfo = getNextAction(p);
+            const nextDate = actionInfo.date;
+            const actionType = actionInfo.type;
+
+            const diffTime = nextDate.getTime() - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            let statusClass = "";
+            let statusText = "";
+            let icon = "fa-droplet";
+            const isSick = p.healthStatus === "sick";
+            const cardClass = isSick ? "plant-card is-sick" : "plant-card";
+            const sickBadge = isSick
+              ? `<span class="health-badge sick"><i class="fa-solid fa-virus"></i> SAKIT</span>`
+              : "";
+
+            if (actionType === "flush") {
+              icon = "fa-rotate";
+              if (diffDays <= 0) {
+                statusClass = "urgent";
+                statusText = "Kuras & Nutrisi Hari Ini!";
+              } else if (diffDays === 1) {
+                statusClass = "today";
+                statusText = "Kuras & Nutrisi Besok";
+              } else {
+                statusText = `Kuras & Nutrisi: ${diffDays} hari lagi`;
+              }
+            } else {
+              if (diffDays <= 0) {
+                statusClass = "urgent";
+                statusText =
+                  p.method === "hydro"
+                    ? "Cek Air Hari Ini!"
+                    : "Siram Hari Ini!";
+                icon = p.method === "hydro" ? "fa-faucet-drip" : "fa-droplet";
+                if (diffDays < 0) statusText = "Terlewat: Cek Segera!";
+              } else if (diffDays === 1) {
+                statusClass = "today";
+                statusText =
+                  p.method === "hydro" ? "Cek Air Besok" : "Siram Besok";
+              } else {
+                statusText = `${p.method === "hydro" ? "Cek" : "Siram"}: ${
+                  DAYS_MAP[nextDate.getDay()]
+                }`;
+              }
+            }
+
+            const img = p.image || DEFAULT_IMG;
+
+            const isHydro = p.method === "hydro";
+            const methodBadge = isHydro
+              ? `<span class="badge hydro" style="margin-left:5px;"><i class="fa-solid fa-water"></i> Hydro</span>`
+              : "";
+            const hydroOverlay = isHydro
+              ? '<div style="position:absolute; bottom:5px; right:5px; background:#0ea5e9; color:white; padding:2px 6px; border-radius:4px; font-size:0.7rem;"><i class="fa-solid fa-faucet"></i></div>'
+              : "";
+
+            const html = `
+                        <div class="${cardClass}" onclick="app.openDetail(${p.id})">
+                            ${sickBadge}
+                            <div class="plant-img-wrapper">
+                                <img src="${img}" class="plant-img" loading="lazy">
+                                ${hydroOverlay}
+                            </div>
+                            <div class="card-body">
+                                <span class="badge" style="background:var(--primary-light); color:var(--primary)">${p.type}</span>
+                                ${methodBadge}
+                                <h3 style="font-size:1.1rem; margin-bottom:5px; margin-top:5px; color:var(--text-main)">${p.name}</h3>
+                                <div class="status-pill ${statusClass}">
+                                    <i class="fa-solid ${icon}"></i>
+                                    ${statusText}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            container.innerHTML += html;
+          });
+        },
+
+        toggleDay(el, type) {
+          if (type === "fert") {
+            el.classList.toggle("fert-active");
+          } else if (type === "flush") {
+            el.classList.toggle("flush-active");
+          } else {
+            el.classList.toggle("active");
+          }
+        },
+
+        getSelectedDays(containerId, activeClass) {
+          const container = document.getElementById(containerId);
+          const actives = container.querySelectorAll(`.${activeClass}`);
+          return Array.from(actives).map((el) =>
+            parseInt(el.getAttribute("data-day"))
+          );
+        },
+
+        setDays(daysArray, containerId, activeClass) {
+          const container = document.getElementById(containerId);
+          container
+            .querySelectorAll(".day-check")
+            .forEach((el) => el.classList.remove(activeClass));
+          if (daysArray) {
+            daysArray.forEach((d) => {
+              const el = container.querySelector(`.day-check[data-day="${d}"]`);
+              if (el) el.classList.add(activeClass);
+            });
+          }
+        },
+
+        openDetail(id) {
+          const p = this.data.find((x) => x.id === id);
+          if (!p) return;
+          this.currentId = id;
+          const isHydro = p.method === "hydro";
+
+          document.getElementById("dName").innerText = p.name;
+          document.getElementById("dType").innerText = p.type;
+          document.getElementById("dImage").src = p.image || DEFAULT_IMG;
+
+          const healthBadge = document.getElementById("dHealthStatus");
+          if (p.healthStatus === "sick") {
+            healthBadge.innerText = "SAKIT / KARANTINA";
+            healthBadge.style.background = "var(--danger)";
+          } else {
+            healthBadge.innerText = "SEHAT";
+            healthBadge.style.background = "var(--primary)";
+          }
+
+          // --- DYNAMIC LABELS ---
+          const waterNames = p.waterSchedule
+            .sort()
+            .map((d) => DAYS_MAP[d])
+            .join(", ");
+          const waterLabel = isHydro ? "Jadwal Cek Air" : "Jadwal Siram";
+          document.getElementById(
+            "dScheduleInfo"
+          ).innerText = `${waterLabel}: ${waterNames}`;
+
+          if (isHydro) {
+            const freq = p.flushFrequency || "-";
+            document.getElementById(
+              "dFertInfo"
+            ).innerText = `Jadwal Kuras & Nutrisi: Setiap ${freq} hari`;
+          } else {
+            const fertNames = (p.fertSchedule || [])
+              .sort()
+              .map((d) => DAYS_MAP[d])
+              .join(", ");
+            document.getElementById(
+              "dFertInfo"
+            ).innerText = `Jadwal Pupuk: ${fertNames}`;
+          }
+
+          // --- DYNAMIC BUTTONS ---
+          const btnContainer = document.getElementById("actionBtnContainer");
+
+          let mainActionBtn = "";
+          let secActionBtn = "";
+
+          if (isHydro) {
+            mainActionBtn = `
+                        <button class="btn btn-primary btn-sm" style="flex-direction:column; padding:0.6rem; font-size:0.75rem; background:#0ea5e9;" onclick="app.handleAction('topup')">
+                            <i class="fa-solid fa-faucet-drip" style="font-size:1.2rem;"></i> Top-up Air
+                        </button>`;
+            secActionBtn = `
+                         <button class="btn btn-secondary btn-sm" style="flex-direction:column; padding:0.6rem; font-size:0.75rem; color:#0369a1; border-color:#0369a1;" onclick="app.handleAction('kuras')">
+                            <i class="fa-solid fa-rotate" style="font-size:1.2rem;"></i> Kuras & Nutrisi
+                        </button>`;
+          } else {
+            mainActionBtn = `
+                        <button class="btn btn-primary btn-sm" style="flex-direction:column; padding:0.6rem; font-size:0.75rem;" onclick="app.handleAction('siram')">
+                            <i class="fa-solid fa-droplet" style="font-size:1.2rem;"></i> Siram
+                        </button>`;
+            secActionBtn = `
+                        <button class="btn btn-secondary btn-sm" style="flex-direction:column; padding:0.6rem; font-size:0.75rem;" onclick="app.handleAction('pupuk')">
+                            <i class="fa-solid fa-flask" style="font-size:1.2rem;"></i> Pupuk
+                        </button>`;
+          }
+
+          btnContainer.innerHTML = `
+                    ${mainActionBtn}
+                    ${secActionBtn}
+                    <button class="btn btn-secondary btn-sm" style="flex-direction:column; padding:0.6rem; font-size:0.75rem; border-color:#f97316; color:#f97316;" onclick="app.logHarvest()">
+                        <i class="fa-solid fa-basket-shopping" style="font-size:1.2rem;"></i> Panen
+                    </button>
+                    <button class="btn btn-secondary btn-sm" style="flex-direction:column; padding:0.6rem; font-size:0.75rem; border-color:var(--danger); color:var(--danger);" onclick="app.openClinicForm()">
+                        <i class="fa-solid fa-suitcase-medical" style="font-size:1.2rem;"></i> Klinik
+                    </button>
+                    <button class="btn btn-secondary btn-sm" style="flex-direction:column; padding:0.6rem; font-size:0.75rem; border-color:#0ea5e9; color:#0ea5e9;" onclick="app.openSensorModal()">
+                        <i class="fa-solid fa-microchip" style="font-size:1.2rem;"></i> Sensor
+                    </button>
+                    <button class="btn btn-secondary btn-sm" style="flex-direction:column; padding:0.6rem; font-size:0.75rem; border-color:#10b981; color:#10b981;" onclick="app.showQR()">
+                        <i class="fa-solid fa-id-card" style="font-size:1.2rem;"></i> ID
+                    </button>
+                `;
+
+          this.renderTimeline(p);
+          this.openModal("detailModal");
+        },
+
+        openFormModal() {
+          document.getElementById("formTitle").innerText = "Tambah Tanaman";
+          document.getElementById("plantForm").reset();
+          document.getElementById("pId").value = "";
+          this.editingId = null;
+          document.getElementById("imgPreviewBox").style.display = "none";
+
+          app.setMethod("soil"); // Default
+          this.setDays([], "waterDayContainer", "active");
+          this.setDays([], "fertDayContainer", "fert-active");
+          // this.setDays([], 'flushDayContainer', 'flush-active'); // Removed as we use frequency now
+          document.getElementById("hydroFlushFreq").value = "";
+
+          this.openModal("formModal");
+        },
+
+        openEditForm() {
+          const p = this.data.find((x) => x.id === this.currentId);
+          if (!p) return;
+          this.editingId = p.id;
+          document.getElementById("formTitle").innerText = "Edit Tanaman";
+          document.getElementById("pId").value = p.id;
+          document.getElementById("pName").value = p.name;
+          document.getElementById("pType").value = p.type;
+          document.getElementById("pDate").value = p.date;
+
+          // Load Method
+          const method = p.method || "soil";
+          app.setMethod(method);
+
+          this.setDays(p.waterSchedule || [], "waterDayContainer", "active");
+          this.setDays(p.fertSchedule || [], "fertDayContainer", "fert-active");
+          // this.setDays(p.flushSchedule || [], 'flushDayContainer', 'flush-active');
+          document.getElementById("hydroFlushFreq").value =
+            p.flushFrequency || "";
+
+          if (p.image) {
+            document.getElementById("imgPreviewBox").style.display = "block";
+            document.getElementById("imgPreviewTag").src = p.image;
+          } else {
+            document.getElementById("imgPreviewBox").style.display = "none";
+          }
+          this.closeModal("detailModal");
+          this.openModal("formModal");
+        },
+
+        renderTimeline(p) {
+          const tl = document.getElementById("dTimeline");
+          tl.innerHTML = "";
+
+          const nameKey = this.getPlantKey(p.name);
+          const key =
+            nameKey && OPTIMAL_CONDITIONS[nameKey]
+              ? nameKey
+              : p.type || "Default";
+          const range =
+            OPTIMAL_CONDITIONS[key] || OPTIMAL_CONDITIONS["Default"];
+          const isHydro = p.method === "hydro";
+
+          let idealHtml = `<div style="background:rgba(255,255,255,0.5); padding:10px; border-radius:8px; margin-bottom:1rem;">
+                    <h4 style="font-size:0.85rem; margin-bottom:5px; opacity:0.8;">PARAMETER IDEAL:</h4>`;
+
+          if (isHydro) {
+            idealHtml += `
+                        <div class="health-parameter-row">
+                            <span>Nutrisi (EC)</span><span>${range.ec[0]}–${range.ec[1]} μS</span>
+                        </div>
+                        <div class="health-parameter-row">
+                            <span>pH Air</span><span>${range.ph[0]}–${range.ph[1]}</span>
+                        </div>
+                        <div class="health-parameter-row">
+                            <span>Suhu Air</span><span>18–28 °C</span>
+                        </div>`;
+          } else {
+            idealHtml += `
+                        <div class="health-parameter-row">
+                            <span>Kelembaban</span><span>${range.moisture[0]}–${range.moisture[1]} %</span>
+                        </div>
+                        <div class="health-parameter-row">
+                            <span>pH Tanah</span><span>${range.ph[0]}–${range.ph[1]}</span>
+                        </div>
+                        <div class="health-parameter-row">
+                            <span>Nutrisi (EC)</span><span>${range.ec[0]}–${range.ec[1]} μS</span>
+                        </div>`;
+          }
+
+          idealHtml += `
+                    <div class="health-parameter-row">
+                        <span>Suhu Udara</span><span>${range.temp[0]}–${range.temp[1]} °C</span>
+                    </div>
+                    <div class="health-parameter-row">
+                        <span>Cahaya</span><span>${range.lux[0]}–${range.lux[1]} Lux</span>
+                    </div>
+                    <div class="health-parameter-row">
+                        <span>Kelembaban Udara</span><span>${range.hum[0]}–${range.hum[1]} %</span>
+                    </div>
+                </div>`;
+
+          tl.innerHTML += idealHtml;
+
+          const sortedLogs = [...p.logs].sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+
+          sortedLogs.forEach((l) => {
+            const dateObj = new Date(l.date);
+            const d = dateObj.toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "short",
+            });
+            const t = dateObj.toLocaleTimeString("id-ID", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            let icon = "fa-seedling";
+            let color = "var(--primary)";
+            if (l.type === "siram") {
+              icon = "fa-droplet";
+              color = "#3b82f6";
+            } else if (l.type === "pupuk") {
+              icon = "fa-flask";
+              color = "#f59e0b";
+            } else if (l.type === "topup") {
+              icon = "fa-faucet-drip";
+              color = "#0ea5e9";
+            } else if (l.type === "kuras") {
+              icon = "fa-rotate";
+              color = "#0284c7";
+            } else if (l.type === "harvest") {
+              icon = "fa-basket-shopping";
+              color = "#f97316";
+            } else if (l.type === "clinic" && l.sensorData) {
+              icon = "fa-microchip";
+              color = "#0ea5e9";
+            } else if (l.type === "clinic") {
+              icon = "fa-suitcase-medical";
+              color = "#ef4444";
+            }
+
+            let content = "";
+            if (l.sensorData) {
+              const s = l.sensorData;
+              const parts = [];
+              if (s.moisture) parts.push(`Moist: ${s.moisture}%`);
+              if (s.ph) parts.push(`pH: ${s.ph}`);
+              if (s.ec) parts.push(`EC: ${s.ec}`);
+              if (s.tempWater) parts.push(`Water: ${s.tempWater}°C`);
+              if (s.temp) parts.push(`Air: ${s.temp}°C`);
+              if (s.hum) parts.push(`Hum: ${s.hum}%`);
+              if (s.lux) parts.push(`Lux: ${s.lux}`);
+              content = `<div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px; font-family:monospace;">${parts.join(
+                " | "
+              )}</div>`;
+            } else {
+              content = l.desc
+                ? `<div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">${l.desc}</div>`
+                : "";
+            }
+
+            let statusBadge = "";
+            if (
+              l.status &&
+              (l.status === "Warning" || l.status === "Critical") &&
+              l.issues &&
+              l.issues.length > 0
+            ) {
+              const badgeColor =
+                l.status === "Critical" ? "#ef4444" : "#f59e0b";
+              const badgeText =
+                l.status === "Critical" ? "SAKIT" : "PERLU TINDAKAN";
+              const issuesJson = encodeURIComponent(JSON.stringify(l.issues));
+              statusBadge = `<div style="margin-top:8px;">
+                            <button onclick="app.showInstruction('${issuesJson}')" style="background:${badgeColor}; color:white; border:none; border-radius:6px; padding:6px 12px; font-size:0.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                                <i class="fa-solid fa-circle-exclamation"></i> ${badgeText} (Klik untuk Instruksi)
+                            </button>
+                        </div>`;
+            }
+
+            tl.innerHTML += `
+                        <div style="display:flex; gap:15px; margin-bottom:15px; align-items:start;">
+                            <div style="min-width:60px; text-align:right; padding-top:2px;">
+                                <div style="font-size:0.85rem; font-weight:700; color:var(--text-main);">${d}</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);">${t}</div>
+                            </div>
+                            <div style="flex:1; border-left: 2px solid ${color}; padding-left:12px;">
+                                <div style="font-weight:600; font-size:0.95rem; color:${color}">
+                                    <i class="fa-solid ${icon}" style="margin-right:5px;"></i> ${l.action}
+                                </div>
+                                ${content}
+                                ${statusBadge}
+                            </div>
+                        </div>
+                    `;
+          });
+        },
+
+        async handleAction(type) {
+          const idx = this.data.findIndex((p) => p.id === this.currentId);
+          const now = new Date();
+          let actionText = "";
+
+          if (type === "siram") {
+            this.data[idx].lastWater = now.toISOString();
+            actionText = "Disiram";
+          } else if (type === "pupuk") {
+            this.data[idx].lastFert = now.toISOString();
+            actionText = "Diberi Pupuk";
+          } else if (type === "topup") {
+            this.data[idx].lastWater = now.toISOString();
+            actionText = "Top-up Nutrisi & Air";
+          } else if (type === "kuras") {
+            this.data[idx].lastFlush = now.toISOString();
+            this.data[idx].lastWater = now.toISOString(); // Kuras implies refilling water
+            actionText = "Kuras & Ganti Nutrisi";
+          }
+
+          this.data[idx].logs.push({
+            date: now.toISOString(),
+            type,
+            action: actionText,
+          });
+
+          await this.savePlant(this.data[idx]);
+          this.renderTimeline(this.data[idx]);
+          this.showToast(`${actionText} berhasil!`);
+          this.renderDashboard();
+        },
+
+        logHarvest() {
+          const amount = prompt("Berapa kg hasil panen?");
+          if (amount) {
+            const idx = this.data.findIndex((p) => p.id === this.currentId);
+            this.data[idx].logs.push({
+              date: new Date().toISOString(),
+              type: "harvest",
+              action: `Panen ${amount}kg`,
+              amount: parseFloat(amount),
+            });
+
+            if (confirm("Catat panen ini sebagai Pemasukan di Keuangan?")) {
+              this.openFinanceModal();
+              document.getElementById("fType").value = "in";
+              document.getElementById(
+                "fDesc"
+              ).value = `Jual Panen ${this.data[idx].name} ${amount}kg`;
+            }
+
+            this.savePlant(this.data[idx]);
+            this.renderTimeline(this.data[idx]);
+            this.showToast("Panen tercatat!");
+          }
+        },
+
+        openClinicForm() {
+          const p = this.data.find((x) => x.id === this.currentId);
+          if (!p) return;
+          document.getElementById("cStatus").value =
+            p.healthStatus || "healthy";
+          document.getElementById("cIssue").value = "";
+          document.getElementById("cSolution").value = "";
+          document.getElementById("cSeverity").value = "";
+          document.getElementById("cSuggestion").style.display = "none";
+
+          const dl = document.getElementById("issueList");
+          if (dl)
+            dl.innerHTML = Object.keys(CLINIC_KNOWLEDGE)
+              .map((k) => `<option value="${k}">`)
+              .join("");
+
+          this.checkClinicStatus();
+          this.openModal("clinicModal");
+        },
+
+        checkClinicStatus() {
+          const status = document.getElementById("cStatus").value;
+          const sev = document.getElementById("cSeverity");
+          if (status === "sick") {
+            sev.disabled = false;
+          } else {
+            sev.disabled = true;
+            sev.value = "";
+          }
+        },
+
+        showQR() {
+          const p = this.data.find((x) => x.id === this.currentId);
+          if (!p) return;
+          let baseUrl = "https://adenanma.github.io/farm/index.html";
+          try {
+            const origin = window.location.origin || "";
+            const path = window.location.pathname || "/index.html";
+            const isLocal =
+              !origin ||
+              origin.indexOf("localhost") > -1 ||
+              origin.indexOf("127.0.0.1") > -1 ||
+              origin.indexOf("file://") === 0;
+            if (!isLocal) baseUrl = `${origin}${path}`;
+          } catch (_) {}
+          const url = `${baseUrl}?plantId=${encodeURIComponent(p.id)}`;
+          const img = document.getElementById("qrImage");
+          const nameEl = document.getElementById("qrName");
+          const typeEl = document.getElementById("qrType");
+          const idEl = document.getElementById("qrId");
+          const data = encodeURIComponent(url);
+          const prov = [
+            `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${data}&choe=UTF-8`,
+            `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${data}`,
+            `https://goqr.me/api/img?size=150x150&data=${data}`,
+          ];
+          if (img) {
+            let i = 0;
+            const tryNext = () => {
+              if (i >= prov.length) return;
+              img.onload = null;
+              img.onerror = () => {
+                i++;
+                tryNext();
+              };
+              img.src = prov[i];
+            };
+            tryNext();
+          }
+          if (nameEl) nameEl.innerText = p.name || "-";
+          if (typeEl) typeEl.innerText = p.type || "-";
+          if (idEl) idEl.innerText = p.id;
+          this.openModal("qrModal");
+        },
+
+        checkClinicSuggestion() {
+          const val = document.getElementById("cIssue").value;
+          const box = document.getElementById("cSuggestion");
+          const txt = document.getElementById("cSuggestionText");
+          const key = Object.keys(CLINIC_KNOWLEDGE).find(
+            (k) => k.toLowerCase() === val.toLowerCase()
+          );
+          if (key) {
+            txt.innerText = CLINIC_KNOWLEDGE[key];
+            box.style.display = "block";
+          } else {
+            box.style.display = "none";
+          }
+        },
+
+        saveClinicLog() {
+          const status = document.getElementById("cStatus").value;
+          const issue = document.getElementById("cIssue").value;
+          const solution = document.getElementById("cSolution").value;
+          const severity = document.getElementById("cSeverity").value;
+
+          if (!issue && status === "sick") {
+            alert("Mohon isi masalah/penyakitnya.");
+            return;
+          }
+
+          const idx = this.data.findIndex((p) => p.id === this.currentId);
+          const prevStatus = this.data[idx].healthStatus;
+          this.data[idx].healthStatus = status;
+
+          let actionText = "Laporan Klinik";
+          let descText = "";
+
+          if (status === "sick") {
+            const sevText = severity ? `[${severity}]` : "";
+            actionText = `Sakit: ${issue} ${sevText}`;
+            descText = `Solusi: ${solution || "-"}`;
+          } else if (prevStatus === "sick" && status === "healthy") {
+            actionText = "Tanaman Sembuh";
+            descText = `Catatan: ${solution || "Kondisi membaik"}`;
+          } else {
+            actionText = `Cek Kesehatan: ${issue || "Rutin"}`;
+            descText = `Tindakan: ${solution || "-"}`;
+          }
+
+          this.data[idx].logs.push({
+            date: new Date().toISOString(),
+            type: "clinic",
+            action: actionText,
+            desc: descText,
+          });
+
+          this.savePlant(this.data[idx]);
+          this.closeModal("clinicModal");
+
+          const healthBadge = document.getElementById("dHealthStatus");
+          if (healthBadge) {
+            if (status === "sick") {
+              healthBadge.innerText = "SAKIT / KARANTINA";
+              healthBadge.style.background = "var(--danger)";
+            } else {
+              healthBadge.innerText = "SEHAT";
+              healthBadge.style.background = "var(--primary)";
+            }
+          }
+
+          this.renderTimeline(this.data[idx]);
+          this.renderGrid();
+          this.showToast("Data klinik disimpan!");
+        },
+
+        async deletePlant() {
+          if (confirm("Hapus permanen?")) {
+            if (!this.user) return;
+            const idToDelete = this.currentId;
+            const uid = this.user.uid;
+
+            // Hapus dari memory
+            this.data = this.data.filter((p) => p.id !== idToDelete);
+
+            // Hapus dari Firebase (Path user)
+            try {
+              const docRef = window.fbOps.doc(
+                window.db,
+                "users",
+                uid,
+                "plants",
+                idToDelete.toString()
+              );
+              await window.fbOps.deleteDoc(docRef);
+              this.showToast("Data dihapus dari Cloud");
+            } catch (e) {
+              console.error(e);
+            }
+
+            this.closeModal("detailModal");
+            this.updateUI(); // Tidak perlu panggil save() lagi karena deleteDoc sudah menghapus di cloud
+          }
+        },
+
+        // --- HELPER: Resolve Plant Name ---
+        getPlantKey(name) {
+          if (!name) return null;
+          const lower = name.toLowerCase();
+          // 1. Cek Exact/Partial Match di Keys (Latin)
+          let foundKey = Object.keys(PLANT_KNOWLEDGE).find((k) =>
+            lower.includes(k.toLowerCase())
+          );
+          if (foundKey) return foundKey;
+
+          // 2. Cek Match di name_id (Indonesia) atau aliases
+          foundKey = Object.keys(PLANT_KNOWLEDGE).find((k) => {
+            const entry = PLANT_KNOWLEDGE[k];
+            const idMatch =
+              entry.name_id && lower.includes(entry.name_id.toLowerCase());
+            const aliasMatch =
+              entry.aliases &&
+              entry.aliases.some((a) => lower.includes(a.toLowerCase()));
+            return idMatch || aliasMatch;
+          });
+          return foundKey;
+        },
+
+        checkPresets(val) {
+          if (this.editingId) return;
+          const hint = document.getElementById("presetHint");
+          const matchKey = this.getPlantKey(val);
+
+          if (matchKey) {
+            this.activePreset = PLANT_KNOWLEDGE[matchKey];
+            const displayName = this.activePreset.name_id
+              ? `${this.activePreset.name_id} (${matchKey})`
+              : matchKey;
+            hint.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Jadwal otomatis: <b>${displayName}</b>. Klik untuk isi.`;
+            hint.style.display = "flex";
+          } else {
+            hint.style.display = "none";
+            this.activePreset = null;
+          }
+        },
+
+        applyPreset() {
+          if (this.activePreset) {
+            // Cari Key Latin dari PLANT_KNOWLEDGE
+            const latinKey = Object.keys(PLANT_KNOWLEDGE).find(
+              (key) => PLANT_KNOWLEDGE[key] === this.activePreset
+            );
+
+            if (latinKey) {
+              const displayName = this.activePreset.name_id
+                ? `${latinKey} (${this.activePreset.name_id})`
+                : latinKey;
+              document.getElementById("pName").value = displayName;
+            }
+
+            document.getElementById("pType").value = this.activePreset.type;
+            this.setDays(
+              this.activePreset.schedule,
+              "waterDayContainer",
+              "active"
+            );
+            this.setDays(
+              this.activePreset.fert,
+              "fertDayContainer",
+              "fert-active"
+            );
+            document.getElementById("presetHint").style.display = "none";
+            this.showToast("Jadwal otomatis terisi!");
+          }
+        },
+
+        async getAutoImage(name) {
+          const matchKey = this.getPlantKey(name);
+          const fromWiki = await this.resolveWikipediaImage(name, matchKey);
+          if (fromWiki) return fromWiki;
+          if (
+            matchKey &&
+            PLANT_KNOWLEDGE[matchKey] &&
+            PLANT_KNOWLEDGE[matchKey].img
+          )
+            return PLANT_KNOWLEDGE[matchKey].img;
+          return DEFAULT_IMG;
+        },
+
+        normalizeTitle(str) {
+          if (!str) return "";
+          const base = str.split("(")[0].trim();
+          return base
+            .replace(/\s+/g, " ")
+            .split(" ")
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+            .join(" ");
+        },
+
+        async fetchWikiThumb(title, lang) {
+          try {
+            const t = encodeURIComponent(title.replace(/\s+/g, "_"));
+            const rest = await fetch(
+              `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${t}`
+            );
+            if (rest.ok) {
+              const data = await rest.json();
+              if (data && data.thumbnail && data.thumbnail.url)
+                return data.thumbnail.url;
+            }
+          } catch (e) {}
+          try {
+            const api = await fetch(
+              `https://${lang}.wikipedia.org/w/api.php?action=query&prop=pageimages&titles=${encodeURIComponent(
+                title
+              )}&pithumbsize=600&format=json&origin=*`
+            );
+            if (api.ok) {
+              const j = await api.json();
+              const pages =
+                j && j.query && j.query.pages ? j.query.pages : null;
+              if (pages) {
+                const first = Object.values(pages)[0];
+                if (first && first.thumbnail && first.thumbnail.source)
+                  return first.thumbnail.source;
+              }
+            }
+          } catch (e) {}
+          return null;
+        },
+
+        async resolveWikipediaImage(name, matchKey) {
+          const candidates = [];
+          const normName = this.normalizeTitle(name);
+          if (matchKey) candidates.push(matchKey);
+          if (normName) candidates.push(normName);
+          if (matchKey && PLANT_KNOWLEDGE[matchKey]) {
+            const entry = PLANT_KNOWLEDGE[matchKey];
+            if (entry.name_id)
+              candidates.push(this.normalizeTitle(entry.name_id));
+            if (entry.aliases && Array.isArray(entry.aliases)) {
+              entry.aliases.forEach((a) =>
+                candidates.push(this.normalizeTitle(a))
+              );
+            }
+          }
+          const uniq = Array.from(new Set(candidates.filter(Boolean)));
+          for (let i = 0; i < uniq.length; i++) {
+            const key = uniq[i];
+            if (this.wikiCache[key]) return this.wikiCache[key];
+            let url = await this.fetchWikiThumb(key, "en");
+            if (!url) url = await this.fetchWikiThumb(key, "id");
+            if (url) {
+              this.wikiCache[key] = url;
+              return url;
+            }
+          }
+          return null;
+        },
+
+        fetchWeather() {
+          if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+              const lat = position.coords.latitude;
+              const lon = position.coords.longitude;
+              try {
+                const res = await fetch(
+                  `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&forecast_days=1`
+                );
+                const data = await res.json();
+                const temp = Math.round(data.current_weather.temperature);
+                const code = data.current_weather.weathercode;
+                document.getElementById("weatherTemp").innerText = `${temp}°C`;
+                let desc = "Cerah";
+                let icon = "fa-sun";
+                let isRain = false;
+                if (code >= 1 && code <= 3) {
+                  desc = "Berawan";
+                  icon = "fa-cloud";
+                }
+                if (code >= 51) {
+                  desc = "Hujan";
+                  icon = "fa-cloud-showers-heavy";
+                  isRain = true;
+                }
+                document.getElementById(
+                  "weatherDesc"
+                ).innerText = `${desc} • Lokasi Terdeteksi`;
+                document.querySelector(
+                  ".weather-icon i"
+                ).className = `fa-solid ${icon}`;
+                document.getElementById("rainDelayBtn").style.display = isRain
+                  ? "inline-flex"
+                  : "none";
+              } catch (err) {}
+            });
+          }
+        },
+
+        applyRainDelay() {
+          if (
+            confirm(
+              "Tandai semua jadwal SIRAM hari ini sebagai 'Sudah Disiram' karena hujan?"
+            )
+          ) {
+            const today = new Date().setHours(0, 0, 0, 0);
+            let plantsToUpdate = [];
+            this.data.forEach((p) => {
+              const nextDate = this.getNextDate(p.waterSchedule, p.lastWater);
+              if (nextDate.getTime() <= today) {
+                p.lastWater = new Date().toISOString();
+                p.logs.push({
+                  date: new Date().toISOString(),
+                  type: "siram",
+                  action: "Dilewati (Hujan)",
+                });
+                plantsToUpdate.push(p);
+              }
+            });
+            this.batchUpdatePlants(plantsToUpdate);
+            this.updateUI();
+            this.showToast(`${plantsToUpdate.length} tanaman diperbarui.`);
+          }
+        },
+
+        requestNotification() {
+          if (
+            "Notification" in window &&
+            Notification.permission !== "denied" &&
+            Notification.permission !== "granted"
+          ) {
+            Notification.requestPermission();
+          }
+        },
+
+        checkReminders() {
+          if (Notification.permission !== "granted") return;
+          const today = new Date().setHours(0, 0, 0, 0);
+          const plantsToNotify = this.data.filter((p) => {
+            const nextWater = this.getNextDate(p.waterSchedule, p.lastWater);
+            if (nextWater.getTime() <= today) return true;
+
+            if (p.method === "hydro" && p.flushFrequency) {
+              const nextFlush = this.getNextFlushDate(
+                p.flushFrequency,
+                p.lastFlush,
+                p.date
+              );
+              if (nextFlush && nextFlush.getTime() <= today) return true;
+            }
+            return false;
+          });
+          if (plantsToNotify.length > 0) {
+            new Notification("SmartGarden Reminder", {
+              body: `Ada ${plantsToNotify.length} tanaman perlu perawatan hari ini!`,
+              icon: "https://cdn-icons-png.flaticon.com/512/628/628283.png",
+            });
+          }
+        },
+
+        exportData() {
+          const dataStr =
+            "data:text/json;charset=utf-8," +
+            encodeURIComponent(
+              JSON.stringify({ plants: this.data, finance: this.financeData })
+            );
+          const a = document.createElement("a");
+          a.href = dataStr;
+          a.download = `smartgarden_backup_${new Date()
+            .toISOString()
+            .slice(0, 10)}.json`;
+          a.click();
+        },
+
+        exportCSV() {
+          let csv =
+            "Nama Tanaman,Tipe,Metode,Jadwal Siram,Jadwal Pupuk,Kesehatan,Tgl Aktivitas,Jam,Jenis Aktivitas,Keterangan\n";
+          this.data.forEach((p) => {
+            const wSched = p.waterSchedule.map((d) => DAYS_MAP[d]).join("/");
+            const fSched = (p.fertSchedule || [])
+              .map((d) => DAYS_MAP[d])
+              .join("/");
+            const hStat = p.healthStatus === "sick" ? "Sakit" : "Sehat";
+            p.logs.forEach((l) => {
+              const dObj = new Date(l.date);
+              const action = (l.action || "").replace(/"/g, '""');
+              const desc = (l.desc || "").replace(/"/g, '""');
+              csv += `"${p.name}","${p.type}","${
+                p.method || "soil"
+              }","${wSched}","${fSched}","${hStat}","${dObj.toLocaleDateString()}","${dObj.toLocaleTimeString()}","${
+                l.type
+              }","${action} ${desc}"\n`;
+            });
+          });
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = `smartgarden_report.csv`;
+          a.click();
+        },
+
+        importData(input) {
+          const file = input.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            try {
+              const parsed = JSON.parse(e.target.result);
+              if (parsed.plants) {
+                this.data = parsed.plants;
+                this.financeData = parsed.finance || [];
+              } else {
+                this.data = parsed;
+              }
+
+              if (this.data.length > 0) await this.batchUpdatePlants(this.data);
+              if (this.financeData.length > 0)
+                await this.batchUpdateFinance(this.financeData);
+
+              this.showToast("Restore berhasil!");
+              this.updateUI();
+            } catch (err) {
+              console.error(err);
+              alert("File rusak atau gagal restore!");
+            }
+          };
+          reader.readAsText(file);
+        },
+
+        switchTab(id) {
+          document
+            .querySelectorAll(".view-section")
+            .forEach((e) => (e.style.display = "none"));
+          document.getElementById(id).style.display = "block";
+          document
+            .querySelectorAll(".nav-link")
+            .forEach((e) => e.classList.remove("active"));
+
+          const links = document.querySelectorAll(".nav-link");
+          if (id === "dashboard") links[0].classList.add("active");
+          if (id === "garden") links[1].classList.add("active");
+          if (id === "calculator") links[2].classList.add("active");
+          if (id === "finance") links[3].classList.add("active");
+          if (id === "settings") links[4].classList.add("active");
+        },
+        openModal(id) {
+          document.getElementById(id).classList.add("active");
+        },
+        closeModal(id) {
+          document.getElementById(id).classList.remove("active");
+        },
+        toggleTheme() {
+          const current = document.documentElement.getAttribute("data-theme");
+          const next = current === "dark" ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", next);
+          localStorage.setItem("sg_theme", next);
+        },
+        showToast(msg) {
+          const t = document.getElementById("toast");
+          document.getElementById("toastMsg").innerText = msg;
+          t.classList.add("show");
+          setTimeout(() => t.classList.remove("show"), 3000);
+        },
+
+        async compressImage(file) {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+              const img = new Image();
+              img.src = e.target.result;
+              img.onload = () => {
+                const canvas = document.createElement("canvas");
+                const maxW = 500;
+                const scale = maxW / img.width;
+                canvas.width = maxW;
+                canvas.height = img.height * scale;
+                canvas
+                  .getContext("2d")
+                  .drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL("image/jpeg", 0.7));
+              };
+            };
+          });
+        },
+      };
+
+      // Expose app to global window object
+      window.app = app;
+
+      // --- EVENTS ---
+      document.getElementById("financeForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const type = document.getElementById("fType").value;
+        const amount = parseInt(document.getElementById("fAmount").value);
+        const desc = document.getElementById("fDesc").value;
+        const date = document.getElementById("fDate").value;
+
+        if (app.financeEditingId) {
+          const idx = app.financeData.findIndex(
+            (x) => x.id === app.financeEditingId
+          );
+          if (idx > -1) {
+            app.financeData[idx] = {
+              id: app.financeEditingId,
+              type,
+              amount,
+              desc,
+              date,
+            };
+            app.showToast("Transaksi diperbarui!");
+          }
+        } else {
+          app.financeData.push({ id: Date.now(), type, amount, desc, date });
+          app.showToast("Transaksi disimpan!");
+        }
+
+        app.saveFinance();
+        app.closeModal("financeModal");
+      });
+
+      document
+        .getElementById("pImageInput")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              document.getElementById("imgPreviewBox").style.display = "block";
+              document.getElementById("imgPreviewTag").src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+      document
+        .getElementById("plantForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const btn = e.target.querySelector('button[type="submit"]');
+          btn.innerText = "Menyimpan...";
+          btn.disabled = true;
+
+          try {
+            const name = document.getElementById("pName").value;
+            const file = document.getElementById("pImageInput").files[0];
+            const editingId = document.getElementById("pId").value;
+            const waterSchedule = app.getSelectedDays(
+              "waterDayContainer",
+              "active"
+            );
+            const fertSchedule = app.getSelectedDays(
+              "fertDayContainer",
+              "fert-active"
+            );
+            // const flushSchedule = app.getSelectedDays('flushDayContainer', 'flush-active'); // Removed
+            const method = document.getElementById("pMethod").value;
+            const flushFreq =
+              parseInt(document.getElementById("hydroFlushFreq").value) || 0;
+
+            if (!name || name.trim() === "") {
+              alert("Nama tanaman harus diisi!");
+              btn.innerText = "Simpan";
+              btn.disabled = false;
+              return;
+            }
+            if (waterSchedule.length === 0) {
+              alert("Pilih minimal 1 hari jadwal air!");
+              btn.innerText = "Simpan";
+              btn.disabled = false;
+              return;
+            }
+            if (method === "hydro" && flushFreq < 1) {
+              alert(
+                "Frekuensi kuras & ganti nutrisi harus diisi (minimal 1 hari)!"
+              );
+              btn.innerText = "Simpan";
+              btn.disabled = false;
+              return;
+            }
+
+            let imgBase64 = null;
+            if (file) imgBase64 = await app.compressImage(file);
+            else if (!editingId) imgBase64 = await app.getAutoImage(name);
+
+            let plantToSave;
+            if (editingId) {
+              const idx = app.data.findIndex((p) => p.id == editingId);
+              if (idx > -1) {
+                app.data[idx].name = name;
+                app.data[idx].type = document.getElementById("pType").value;
+                app.data[idx].date = document.getElementById("pDate").value;
+                app.data[idx].method = method;
+                app.data[idx].waterSchedule = waterSchedule;
+                app.data[idx].fertSchedule = fertSchedule;
+                // app.data[idx].flushSchedule = flushSchedule;
+                app.data[idx].flushFrequency = flushFreq; // New Field
+                if (imgBase64) app.data[idx].image = imgBase64;
+                plantToSave = app.data[idx];
+              }
+              app.showToast("Data diperbarui!");
+              app.updateUI();
+            } else {
+              const newPlant = {
+                id: Date.now(),
+                name: name,
+                type: document.getElementById("pType").value,
+                method: method,
+                date: document.getElementById("pDate").value,
+                waterSchedule: waterSchedule,
+                fertSchedule: fertSchedule,
+                // flushSchedule: flushSchedule,
+                flushFrequency: flushFreq, // New Field
+                healthStatus: "healthy",
+                lastWater: document.getElementById("pDate").value,
+                lastFert: document.getElementById("pDate").value,
+                image: imgBase64,
+                logs: [
+                  {
+                    date: new Date().toISOString(),
+                    type: "init",
+                    action:
+                      method === "hydro"
+                        ? "Sistem Hidroponik Aktif"
+                        : "Ditanam",
+                  },
+                ],
+              };
+              plantToSave = newPlant;
+              app.data.unshift(newPlant);
+              app.showToast("Tanaman ditambahkan!");
+              app.updateUI();
+            }
+
+            if (plantToSave) await app.savePlant(plantToSave);
+            app.closeModal("formModal");
+            e.target.reset();
+            app.switchTab("garden");
+          } catch (err) {
+            console.error(err);
+            alert("Gagal menyimpan.");
+          } finally {
+            btn.innerText = "Simpan";
+            btn.disabled = false;
+          }
+        });
+
+      // document.addEventListener('DOMContentLoaded', () => app.init());
+      // Init dipanggil di module script setelah Firebase siap
+    </script>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          // Gunakan versi statis agar tidak install ulang setiap kali refresh
+          // Ganti 'v=2' jika ada update besar pada service worker di masa depan
+          navigator.serviceWorker
+            .register("./service-worker.js?v=2")
+            .then((registration) => {
+              console.log(
+                "ServiceWorker berhasil didaftarkan dengan scope: ",
+                registration.scope
+              );
+            })
+            .catch((err) => {
+              console.log("ServiceWorker gagal didaftarkan: ", err);
+            });
+        });
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="modal-overlay" id="instructionModal">
+      <div class="modal-box" style="max-width: 500px">
+        <div style="padding: 1.5rem">
+          <h3
+            style="
+              margin-bottom: 1rem;
+              color: var(--text-main);
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            "
+          >
+            <i
+              class="fa-solid fa-user-doctor"
+              style="color: var(--primary)"
+            ></i>
+            Panduan Penanganan
+          </h3>
+          <div
+            style="
+              background: #f0f9ff;
+              padding: 1rem;
+              border-radius: 8px;
+              border: 1px solid #bae6fd;
+              margin-bottom: 1.5rem;
+            "
+          >
+            <ul
+              id="instructionList"
+              style="margin: 0; padding-left: 20px; color: var(--text-main)"
+            >
+              <!-- Dynamic Content -->
+            </ul>
+          </div>
+          <button
+            class="btn btn-primary"
+            style="width: 100%"
+            onclick="app.closeModal('instructionModal')"
+          >
+            Mengerti
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      // Tambahkan 'getAuth', 'signInWithPopup', 'GoogleAuthProvider', 'signOut', 'onAuthStateChanged'
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        setDoc,
+        deleteDoc,
+        writeBatch,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA6ebPPPecvjFK6JPTUfAHMVlJbf-HHQe0",
+        authDomain: "smartgrowa-app.firebaseapp.com",
+        projectId: "smartgrowa-app",
+        storageBucket: "smartgrowa-app.firebasestorage.app",
+        messagingSenderId: "849584934306",
+        appId: "1:849584934306:web:e87b91a194a3831d1f36fb",
+        measurementId: "G-780D27B8BC",
+      };
+
+      try {
+        if (!firebaseConfig.apiKey) {
+          throw new Error("API Key belum diisi di firebaseConfig");
+        }
+
+        console.log("Starting Firebase Init...");
+        const firebaseApp = initializeApp(firebaseConfig);
+        console.log("Firebase App Initialized");
+
+        const db = getFirestore(firebaseApp);
+        console.log("Firestore Initialized");
+
+        const auth = getAuth(firebaseApp);
+        console.log("Auth Initialized");
+
+        // Expose ke window agar bisa dipakai di script utama
+        window.db = db;
+        window.auth = auth;
+        window.authOps = {
+          signInWithPopup,
+          GoogleAuthProvider,
+          signOut,
+          onAuthStateChanged,
+        };
+        window.fbOps = {
+          collection,
+          getDocs,
+          doc,
+          setDoc,
+          deleteDoc,
+          writeBatch,
+        };
+
+        console.log("Firebase Global Vars Set");
+
+        // Init dipanggil setelah module siap untuk menghindari race condition
+        if (window.app) {
+          console.log("Starting App Init...");
+          window.app.init();
+        } else {
+          console.warn("window.app belum siap saat Firebase init selesai");
+        }
+      } catch (e) {
+        console.error("Gagal inisialisasi Firebase:", e);
+        alert("Gagal inisialisasi Firebase:\n" + e.message);
+      }
+    </script>
+  </body>
+</html>
