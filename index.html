@@ -930,6 +930,10 @@
         color: var(--primary);
       }
       @media print {
+        @page {
+          size: auto;
+          margin: 0;
+        }
         body * {
           visibility: hidden;
         }
@@ -938,10 +942,17 @@
           visibility: visible;
         }
         #printableArea {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
+          position: fixed;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          width: 300px;
+          border: 1px solid #000;
+          padding: 20px;
+          border-radius: 10px;
+          text-align: center;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
         }
         #qrModal .btn {
           display: none !important;
