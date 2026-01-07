@@ -929,6 +929,24 @@
         border-color: var(--primary);
         color: var(--primary);
       }
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #printableArea,
+        #printableArea * {
+          visibility: visible;
+        }
+        #printableArea {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+        #qrModal .btn {
+          display: none !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -4322,15 +4340,17 @@
           const idEl = document.getElementById("qrId");
           const data = encodeURIComponent(url);
           const prov = [
-            `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${data}&choe=UTF-8`,
+            `https://quickchart.io/qr?text=${data}&size=150`,
             `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${data}`,
+            `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${data}&choe=UTF-8`,
             `https://goqr.me/api/img?size=150x150&data=${data}`,
           ];
           if (img) {
+            img.crossOrigin = "anonymous";
+            img.referrerPolicy = "no-referrer";
             let i = 0;
             const tryNext = () => {
               if (i >= prov.length) return;
-              img.onload = null;
               img.onerror = () => {
                 i++;
                 tryNext();
