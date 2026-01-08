@@ -2100,16 +2100,6 @@
             "
           ></div>
 
-          <div style="display: flex; gap: 10px; margin-bottom: 1.5rem">
-            <button
-              class="btn btn-danger btn-sm"
-              style="flex: 1"
-              onclick="app.deletePlant()"
-            >
-              <i class="fa-solid fa-trash"></i> Hapus
-            </button>
-          </div>
-
           <h4
             style="
               margin-bottom: 1rem;
@@ -2544,6 +2534,15 @@
     <script>
       let PLANT_KNOWLEDGE = {};
       let OPTIMAL_CONDITIONS = {};
+
+      const DEFAULT_CONDITIONS = {
+        moisture: [60, 80],
+        ph: [6.0, 7.0],
+        ec: [1000, 2000],
+        temp: [20, 30],
+        lux: [10000, 30000],
+        hum: [50, 70],
+      };
 
       const CLINIC_KNOWLEDGE = {
         "Kutu Putih":
@@ -3898,7 +3897,7 @@
               : "";
 
             const html = `
-                        <div class="${cardClass}" onclick="app.openDetail(${p.id})">
+                        <div class="${cardClass}" data-id="${p.id}">
                             ${sickBadge}
                             <div class="plant-img-wrapper">
                                 <img src="${img}" class="plant-img" loading="lazy">
@@ -3911,6 +3910,11 @@
                                 <div class="status-pill ${statusClass}">
                                     <i class="fa-solid ${icon}"></i>
                                     ${statusText}
+                                </div>
+                                <div style="margin-top:8px;">
+                                    <button class="btn btn-danger btn-sm" style="width:100%;" onclick="event.stopPropagation(); app.deletePlantById(${p.id})">
+                                        <i class="fa-solid fa-trash"></i> Hapus
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -3951,9 +3955,9 @@
         },
 
         openDetail(id) {
-          const p = this.data.find((x) => x.id === id);
+          const p = this.data.find((x) => String(x.id) === String(id));
           if (!p) return;
-          this.currentId = id;
+          this.currentId = p.id;
           const isHydro = p.method === "hydro";
 
           document.getElementById("dName").innerText = p.name;
@@ -3970,7 +3974,7 @@
           }
 
           // --- DYNAMIC LABELS ---
-          const waterNames = p.waterSchedule
+          const waterNames = (p.waterSchedule || [])
             .sort()
             .map((d) => DAYS_MAP[d])
             .join(", ");
@@ -4094,7 +4098,10 @@
           tl.innerHTML = "";
 
           const resolved = this.resolveIdealRange(p);
-          const range = resolved.range || OPTIMAL_CONDITIONS["Default"];
+          const range =
+            resolved.range ||
+            OPTIMAL_CONDITIONS["Default"] ||
+            DEFAULT_CONDITIONS;
           const isHydro = p.method === "hydro";
 
           let idealHtml = `<div style="background:rgba(255,255,255,0.5); padding:10px; border-radius:8px; margin-bottom:1rem;">
@@ -4147,7 +4154,7 @@
 
           tl.innerHTML += idealHtml;
 
-          const sortedLogs = [...p.logs].sort(
+          const sortedLogs = (Array.isArray(p.logs) ? [...p.logs] : []).sort(
             (a, b) => new Date(b.date) - new Date(a.date)
           );
 
@@ -4501,6 +4508,11 @@
           }
         },
 
+        deletePlantById(id) {
+          this.currentId = id;
+          this.deletePlant();
+        },
+
         // --- HELPER: Resolve Plant Name ---
         getPlantKey(name) {
           if (!name) return null;
@@ -4592,7 +4604,9 @@
         resolveIdealRange(p) {
           const key = this.resolveOptimalKey(p);
           const entry =
-            OPTIMAL_CONDITIONS[key] || OPTIMAL_CONDITIONS["Default"] || {};
+            OPTIMAL_CONDITIONS[key] ||
+            OPTIMAL_CONDITIONS["Default"] ||
+            DEFAULT_CONDITIONS;
           const hss = this.computeHSS(p.date, p);
           const phases = this.parsePhases(entry);
           let phaseLabel = null;
@@ -5033,6 +5047,15 @@
             reader.readAsDataURL(file);
           }
         });
+
+      // --- EVENT DELEGATION FOR PLANT GRID ---
+      document.getElementById("plantGrid").addEventListener("click", (e) => {
+        const card = e.target.closest(".plant-card");
+        if (card && card.dataset.id) {
+          // Delete button inside card handles its own click with stopPropagation()
+          app.openDetail(card.dataset.id);
+        }
+      });
 
       document
         .getElementById("plantForm")
