@@ -1940,6 +1940,24 @@
               <div id="imgPreviewBox" class="img-preview-container">
                 <img id="imgPreviewTag" src="" />
               </div>
+              <div style="margin-top: 6px">
+                <label
+                  style="
+                    font-size: 0.85rem;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: var(--text-muted);
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    id="pImageRemove"
+                    style="width: auto"
+                  />
+                  Hapus foto saat simpan
+                </label>
+              </div>
               <small
                 style="
                   color: var(--text-muted);
@@ -2804,13 +2822,8 @@
 
         runAnalysis() {
           const p = this.data.find((x) => x.id === this.currentId);
-          const nameKey = this.getPlantKey(p.name);
-          const key =
-            nameKey && OPTIMAL_CONDITIONS[nameKey]
-              ? nameKey
-              : p.type || "Default";
-          const range =
-            OPTIMAL_CONDITIONS[key] || OPTIMAL_CONDITIONS["Default"];
+          const resolved = this.resolveIdealRange(p);
+          const range = resolved.range || OPTIMAL_CONDITIONS["Default"];
           const isHydro = document
             .getElementById("sensorTabHydro")
             .classList.contains("active");
@@ -4070,6 +4083,8 @@
           } else {
             document.getElementById("imgPreviewBox").style.display = "none";
           }
+          const rm = document.getElementById("pImageRemove");
+          if (rm) rm.checked = false;
           this.closeModal("detailModal");
           this.openModal("formModal");
         },
@@ -4078,17 +4093,21 @@
           const tl = document.getElementById("dTimeline");
           tl.innerHTML = "";
 
-          const nameKey = this.getPlantKey(p.name);
-          const key =
-            nameKey && OPTIMAL_CONDITIONS[nameKey]
-              ? nameKey
-              : p.type || "Default";
-          const range =
-            OPTIMAL_CONDITIONS[key] || OPTIMAL_CONDITIONS["Default"];
+          const resolved = this.resolveIdealRange(p);
+          const range = resolved.range || OPTIMAL_CONDITIONS["Default"];
           const isHydro = p.method === "hydro";
 
           let idealHtml = `<div style="background:rgba(255,255,255,0.5); padding:10px; border-radius:8px; margin-bottom:1rem;">
                     <h4 style="font-size:0.85rem; margin-bottom:5px; opacity:0.8;">PARAMETER IDEAL:</h4>`;
+          if (resolved.phaseLabel || typeof resolved.hss === "number") {
+            const phaseInfo = resolved.phaseLabel
+              ? `${resolved.phaseLabel}`
+              : "Umum";
+            idealHtml += `
+                        <div class="health-parameter-row">
+                            <span>Fase</span><span>${phaseInfo} (HSS: ${resolved.hss} hari)</span>
+                        </div>`;
+          }
 
           if (isHydro) {
             idealHtml += `
@@ -4219,10 +4238,33 @@
                                 </div>
                                 ${content}
                                 ${statusBadge}
+                                <div style="margin-top:8px; display:flex; gap:8px;">
+                                  <button class="btn btn-sm btn-danger" style="padding:4px 8px; background:#fee2e2; color:#ef4444; border:none;" onclick="app.deleteActivityLog('${l.date}')">
+                                    <i class="fa-solid fa-trash"></i> Hapus
+                                  </button>
+                                </div>
                             </div>
                         </div>
                     `;
           });
+        },
+
+        deleteActivityLog(dateStr) {
+          const idx = this.data.findIndex((p) => p.id === this.currentId);
+          if (idx < 0) return;
+          if (!confirm("Hapus catatan aktivitas ini?")) return;
+          const before = this.data[idx].logs.length;
+          this.data[idx].logs = (this.data[idx].logs || []).filter(
+            (x) => x.date !== dateStr
+          );
+          const after = this.data[idx].logs.length;
+          if (after < before) {
+            this.savePlant(this.data[idx]);
+            this.renderTimeline(this.data[idx]);
+            this.showToast("Aktivitas dihapus.");
+            this.renderDashboard?.();
+            this.renderGrid?.();
+          }
         },
 
         async handleAction(type) {
@@ -4480,6 +4522,109 @@
             return idMatch || aliasMatch;
           });
           return foundKey;
+        },
+
+        computeHSS(dateStr, p) {
+          try {
+            const start = new Date(dateStr).setHours(0, 0, 0, 0);
+            const today = new Date().setHours(0, 0, 0, 0);
+            const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+            const hasHarvest =
+              p &&
+              Array.isArray(p.logs) &&
+              p.logs.some((l) => l.type === "harvest");
+            return hasHarvest ? diff : Math.max(0, diff);
+          } catch (_) {
+            return 0;
+          }
+        },
+
+        parsePhases(entry) {
+          if (!entry) return null;
+          const phases = entry.phases;
+          if (!phases) return null;
+          if (Array.isArray(phases)) {
+            return phases
+              .map((ph) => {
+                const start =
+                  ph.start_hss ?? ph.start ?? ph.from ?? ph.hss_start ?? 0;
+                const end = ph.end_hss ?? ph.end ?? ph.to ?? ph.hss_end ?? 0;
+                const range = ph.range ?? ph.params ?? ph.conditions ?? ph;
+                const name = ph.name ?? ph.label ?? null;
+                return { start, end, range, name };
+              })
+              .filter((x) => x.range && typeof x.start === "number");
+          }
+          if (typeof phases === "object") {
+            const out = [];
+            Object.keys(phases).forEach((k) => {
+              const m = k.match(/(\d+)\s*-\s*(\d+)/);
+              if (m) {
+                out.push({
+                  start: parseInt(m[1], 10),
+                  end: parseInt(m[2], 10),
+                  range: phases[k],
+                  name: phases[k].name || null,
+                });
+              } else if (k.toLowerCase().includes("panen")) {
+                out.push({
+                  start: Number.MAX_SAFE_INTEGER,
+                  end: Number.MAX_SAFE_INTEGER,
+                  range: phases[k],
+                  name: phases[k].name || "Panen",
+                });
+              }
+            });
+            return out;
+          }
+          return null;
+        },
+
+        resolveOptimalKey(p) {
+          const nameKey = this.getPlantKey(p.name);
+          const key =
+            nameKey && OPTIMAL_CONDITIONS[nameKey]
+              ? nameKey
+              : p.type || "Default";
+          return key;
+        },
+
+        resolveIdealRange(p) {
+          const key = this.resolveOptimalKey(p);
+          const entry =
+            OPTIMAL_CONDITIONS[key] || OPTIMAL_CONDITIONS["Default"] || {};
+          const hss = this.computeHSS(p.date, p);
+          const phases = this.parsePhases(entry);
+          let phaseLabel = null;
+          if (phases && phases.length > 0) {
+            const match =
+              phases.find((ph) => hss >= ph.start && hss <= ph.end) ||
+              phases.find(
+                (ph) =>
+                  ph.start === Number.MAX_SAFE_INTEGER &&
+                  ph.end === Number.MAX_SAFE_INTEGER
+              );
+            if (match && match.range) {
+              const base = entry;
+              const r = {
+                moisture: match.range.moisture ?? base.moisture,
+                ph: match.range.ph ?? base.ph,
+                ec: match.range.ec ?? base.ec,
+                temp: match.range.temp ?? base.temp,
+                lux: match.range.lux ?? base.lux,
+                hum: match.range.hum ?? base.hum,
+              };
+              phaseLabel = match.name || `${match.start}-${match.end} HSS`;
+              return { range: r, phaseLabel, hss };
+            }
+          }
+          const harvested =
+            Array.isArray(p.logs) && p.logs.some((l) => l.type === "harvest");
+          return {
+            range: entry,
+            phaseLabel: harvested ? "Panen" : null,
+            hss,
+          };
         },
 
         checkPresets(val) {
@@ -4951,7 +5096,17 @@
                 app.data[idx].fertSchedule = fertSchedule;
                 // app.data[idx].flushSchedule = flushSchedule;
                 app.data[idx].flushFrequency = flushFreq; // New Field
-                if (imgBase64) app.data[idx].image = imgBase64;
+                const removeImg =
+                  document.getElementById("pImageRemove")?.checked;
+                if (removeImg) {
+                  app.data[idx].image = null;
+                  document.getElementById("imgPreviewBox").style.display =
+                    "none";
+                  document.getElementById("imgPreviewTag").src = "";
+                  document.getElementById("pImageInput").value = "";
+                } else if (imgBase64) {
+                  app.data[idx].image = imgBase64;
+                }
                 plantToSave = app.data[idx];
               }
               app.showToast("Data diperbarui!");
