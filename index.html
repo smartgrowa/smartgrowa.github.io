@@ -1104,6 +1104,65 @@
         color: #0284c7;
         border-color: #bae6fd;
       }
+
+      /* --- RESPONSIVE OPTIMIZATION --- */
+      @media (max-width: 600px) {
+        /* Calendar Mobile */
+        .calendar-grid {
+          gap: 4px;
+        }
+        .calendar-day {
+          min-height: 60px;
+          padding: 2px;
+        }
+        .calendar-date-num {
+          font-size: 0.7rem;
+        }
+        .harvest-marker {
+          font-size: 0.6rem;
+          padding: 1px 2px;
+        }
+        .calendar-day-header {
+          font-size: 0.75rem;
+        }
+
+        /* Navbar Mobile Tweak */
+        .nav-link {
+          font-size: 0.65rem;
+          padding: 0.4rem;
+          min-width: 0;
+        }
+        .nav-link i {
+          font-size: 1.1rem;
+        }
+      }
+
+      /* Clinic Layout Responsive */
+      .clinic-status-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      @media (max-width: 600px) {
+        .clinic-status-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .clinic-photo-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      @media (max-width: 600px) {
+        .clinic-photo-row {
+          flex-direction: column;
+        }
+        .clinic-photo-row > div,
+        .clinic-photo-row > button {
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>
@@ -2427,7 +2486,7 @@
 
           <div class="form-group">
             <label class="form-label">Foto Daun (AI Scan)</label>
-            <div style="display: flex; gap: 10px; align-items: flex-start">
+            <div class="clinic-photo-row">
               <div style="flex: 1">
                 <input
                   type="file"
@@ -2490,9 +2549,7 @@
 
           <div class="form-group">
             <label class="form-label">Status Kesehatan</label>
-            <div
-              style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px"
-            >
+            <div class="clinic-status-grid">
               <select
                 id="cStatus"
                 class="search-input"
