@@ -130,7 +130,7 @@
   "Capsicum Annuum": {
     "name_id": "Cabai",
     "aliases": ["cabe", "chili", "lombok"],
-    "type": "Sayur",
+    "type": "Buah",
     "schedule": [1, 3, 5, 0],
     "fert": [1],
     "img": "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=600&q=80"
@@ -194,7 +194,7 @@
   "Cucumis Sativus": {
     "name_id": "Timun",
     "aliases": ["cucumber", "ketimun"],
-    "type": "Sayur",
+    "type": "Buah",
     "schedule": [0, 2, 4, 6],
     "fert": [2],
     "img": "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=600&q=80"
@@ -346,7 +346,7 @@
   "Momordica Charantia": {
     "name_id": "Pare",
     "aliases": ["bitter melon", "paria"],
-    "type": "Sayur",
+    "type": "Buah",
     "schedule": [1, 4],
     "fert": [2],
     "img": "https://images.unsplash.com/photo-1597850893264-775e5264b3c4?auto=format&fit=crop&w=600&q=80"
@@ -506,7 +506,7 @@
   "Solanum Lycopersicum": {
     "name_id": "Tomat",
     "aliases": ["tomato", "rangam"],
-    "type": "Sayur",
+    "type": "Buah",
     "schedule": [0, 2, 4, 6],
     "fert": [2],
     "img": "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80"
@@ -514,7 +514,7 @@
   "Solanum Melongena": {
     "name_id": "Terong",
     "aliases": ["eggplant", "aubergine"],
-    "type": "Sayur",
+    "type": "Buah",
     "schedule": [1, 4],
     "fert": [2],
     "img": "https://images.unsplash.com/photo-1615485925694-a6dd997724a6?auto=format&fit=crop&w=600&q=80"
