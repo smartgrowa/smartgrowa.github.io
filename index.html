@@ -2889,6 +2889,7 @@
         wikiCache: {},
         deepLinkHandled: false,
         clinicPhotoBase64: null,
+        GEMINI_API_KEY: "AIzaSyAew6-XjD2fWZGj9DsPOv7kaifj68v2V74", // Ganti dengan API Key Anda (1 untuk semua user)
 
         // --- FITUR CALCULATOR NUTRISI ---
         initCalculator() {
@@ -4909,22 +4910,18 @@
             return;
           }
 
-          let apiKey = localStorage.getItem("gemini_api_key");
-          if (!apiKey) {
-            const { value: key } = await Swal.fire({
-              title: "Masukkan API Key Gemini",
-              input: "text",
-              inputLabel: "Gratis di aistudio.google.com",
-              inputPlaceholder: "Paste API Key di sini...",
-              showCancelButton: true,
-            });
-            if (key) {
-              localStorage.setItem("gemini_api_key", key);
-              apiKey = key;
-            } else {
-              return;
-            }
+          // Gunakan Shared Key dari konfigurasi
+          const apiKey = this.GEMINI_API_KEY;
+
+          if (!apiKey || apiKey.includes("YOUR_API_KEY")) {
+            Swal.fire(
+              "Konfigurasi",
+              "Sistem belum dikonfigurasi dengan API Key AI. Hubungi Admin.",
+              "warning"
+            );
+            return;
           }
+
           this.performGeminiAnalysis(apiKey);
         },
 
