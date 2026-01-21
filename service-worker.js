@@ -1,29 +1,29 @@
-const CACHE_NAME = "smartgrowa-v2";
+const CACHE_NAME = "smartgrowa-v3-offline"; // Versi dinaikkan
 const urlsToCache = [
   "./",
   "./index.html",
   "./manifest.json",
   "./logo-1.png",
-  // Aset Eksternal (CDN) yang digunakan di HTML Anda
+  "./logo-2.png", // Pastikan aset ini ada sesuai index.html
+  // Library eksternal
   "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap",
   "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css",
   "https://cdn.jsdelivr.net/npm/chart.js",
+  "https://cdn.jsdelivr.net/npm/sweetalert2@11", // Tambahkan SWAL agar alert tetap jalan offline
 ];
 
-// 1. Install Service Worker & Cache Aset
+// 1. Install SW
 self.addEventListener("install", (event) => {
-  // Paksa SW baru untuk segera aktif, tidak menunggu tab ditutup
   self.skipWaiting();
-
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("Membuka cache...");
+      console.log("[ServiceWorker] Caching aset statis...");
       return cache.addAll(urlsToCache);
-    })
+    }),
   );
 });
 
-// 2. Activate Service Worker & Hapus Cache Lama
+// 2. Activate & Bersihkan Cache Lama
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -32,44 +32,55 @@ self.addEventListener("activate", (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheName !== CACHE_NAME) {
-              console.log("Menghapus cache lama:", cacheName);
+              console.log("[ServiceWorker] Hapus cache lama:", cacheName);
               return caches.delete(cacheName);
             }
-          })
+          }),
         );
       })
-      .then(() => {
-        // Pastikan SW segera mengontrol semua klien (halaman) yang terbuka
-        return self.clients.claim();
-      })
+      .then(() => self.clients.claim()),
   );
 });
 
-// 3. Strategi Fetch: Network First, Fallback to Cache
-// (Coba ambil dari internet dulu agar selalu dapat update terbaru, jika offline baru ambil cache)
+// 3. Fetch Strategy: Stale-While-Revalidate
+// (Load dari cache DULUAN agar instan, lalu update cache di background dari network)
 self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+
+  // PENTING: Jangan cache request ke API Firebase/Firestore/Google Auth via Service Worker.
+  // Biarkan SDK Firebase menangani sinkronisasi datanya sendiri lewat IndexedDB.
+  if (
+    url.origin.includes("googleapis.com") ||
+    url.origin.includes("firebase") ||
+    url.origin.includes("firestore")
+  ) {
+    return; // Langsung ke network (bypass SW)
+  }
+
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Jika berhasil ambil dari internet:
-        // 1. Cek apakah respon valid
-        if (!response || response.status !== 200 || response.type === "error") {
-          return response;
-        }
-
-        // 2. Clone respon karena stream hanya bisa dibaca sekali
-        const responseToCache = response.clone();
-
-        // 3. Simpan versi terbaru ke cache (update cache)
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
+    caches.match(event.request).then((cachedResponse) => {
+      // Fetch dari network untuk update cache di masa depan
+      const fetchPromise = fetch(event.request)
+        .then((networkResponse) => {
+          if (
+            networkResponse &&
+            networkResponse.status === 200 &&
+            networkResponse.type === "basic"
+          ) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          // Jika offline total dan tidak ada di cache, biarkan return undefined
+          // atau bisa diarahkan ke halaman offline.html jika ada.
         });
 
-        return response;
-      })
-      .catch(() => {
-        // Jika internet mati (offline), ambil dari cache
-        return caches.match(event.request);
-      })
+      // Kembalikan data dari cache jika ada (INSTANT LOAD), jika tidak tunggu network
+      return cachedResponse || fetchPromise;
+    }),
   );
 });
