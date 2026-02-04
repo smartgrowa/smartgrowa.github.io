@@ -84,3 +84,55 @@ self.addEventListener("fetch", (event) => {
     }),
   );
 });
+// 4. Handle Incoming Push Notification
+self.addEventListener("push", (event) => {
+  let data = {
+    title: "Peringatan Kebun",
+    body: "Periksa kondisi tanaman Anda!",
+    icon: "logo-1.png",
+  };
+
+  if (event.data) {
+    try {
+      // Coba parsing JSON jika data dikirim dari server
+      data = event.data.json();
+    } catch (e) {
+      // Jika teks biasa
+      data.body = event.data.text();
+    }
+  }
+
+  const options = {
+    body: data.body,
+    icon: "logo-1.png", // Pastikan file ini ada
+    badge: "logo-1.png",
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: 1,
+    },
+    actions: [{ action: "explore", title: "Buka Aplikasi" }],
+  };
+
+  event.waitUntil(self.registration.showNotification(data.title, options));
+});
+
+// 5. Handle Notification Click (Membuka aplikasi saat diklik)
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then((clientList) => {
+      // Jika tab sudah terbuka, fokuskan
+      for (const client of clientList) {
+        if (client.url.includes("index.html") && "focus" in client) {
+          return client.focus();
+        }
+      }
+      // Jika belum, buka window baru
+      if (clients.openWindow) {
+        return clients.openWindow("./index.html");
+      }
+    }),
+  );
+});
